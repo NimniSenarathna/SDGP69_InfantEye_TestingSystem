@@ -69,9 +69,9 @@ class DetailsFormPage(QMainWindow):
         email_input.setFont(font)
         
         # Create buttons
-        submit_button = QPushButton("Submit")
-        clear_button = QPushButton("Clear")
-        cancel_button = QPushButton("Cancel")
+        login_button = QPushButton("Return to LOGINPAGE")
+        submit_button = QPushButton("Submit & start Testing")
+        db_button = QPushButton("Select from existing database")
 
         # Add form elements and buttons to form container
         form_layout = QGridLayout()
@@ -98,9 +98,9 @@ class DetailsFormPage(QMainWindow):
 
         # Add buttons to form container
         button_layout = QHBoxLayout()
+        button_layout.addWidget(login_button)
         button_layout.addWidget(submit_button)
-        button_layout.addWidget(clear_button)
-        button_layout.addWidget(cancel_button)
+        button_layout.addWidget(db_button)
         form_layout.addLayout(button_layout, 9, 1, 1, 2)
 
         # Set the central widget to the form container
