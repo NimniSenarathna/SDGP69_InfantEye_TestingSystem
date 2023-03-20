@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QLineEdit, QPushButton, QGridLayout, QHBoxLayout, QDateEdit
 from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QFont
+from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
 
 class DetailsFormPage(QMainWindow):
@@ -11,40 +13,61 @@ class DetailsFormPage(QMainWindow):
         self.setFixedSize(1900, 1000)
         
         # Set the background color of the window to blue
-        self.setStyleSheet("background-color: blue;")
-
+        self.setStyleSheet("background-color: #D0DAFF;")
 
         # Create a container for the form
         form_container = QWidget()
         form_container.setGeometry(QRect(0, 0, 800, 600))
         form_container.setObjectName("form_container")
         
-        
-        
         # Set the background color of the form container
         form_container.setStyleSheet("background-color: white;")
+        
+        # Set the font size of the input fields and buttons
+        font = QFont()
+        font.setPointSize(12)
 
         # Create form elements
         name_label = QLabel("Name*")
         first_name_input = QLineEdit()
+        first_name_input.setFixedSize(200, 30)  
+        first_name_input.setFont(font) 
         surname_input = QLineEdit()
+        surname_input.setFixedSize(200, 30)
+        surname_input.setFont(font)
         gender_label = QLabel("Gender")
         gender_input = QLineEdit()
+        gender_input.setFixedSize(200, 30)
+        gender_input.setFont(font)
         dob_label = QLabel("Date of Birth")
         dob_input = QDateEdit()
+        dob_input.setFixedSize(200, 30)
+        dob_input.setFont(font)
         test_id_label = QLabel("Test ID")
         test_id_input = QLineEdit()
+        test_id_input.setFixedSize(200, 30)
+        test_id_input.setFont(font)
         parent_type_label = QLabel("Parent Type")
         parent_type_input = QLineEdit()
+        parent_type_input.setFixedSize(200, 30)
+        parent_type_input.setFont(font)
         parent_name_label = QLabel("Parent's Full Name")
         parent_name_input = QLineEdit()
+        parent_name_input.setFixedSize(200, 30)
+        parent_name_input.setFont(font)
         nic_number_label = QLabel("NIC Number")
         nic_number_input = QLineEdit()
+        nic_number_input.setFixedSize(200, 30)
+        nic_number_input.setFont(font)
         contact_number_label = QLabel("Contact Number")
         contact_number_input = QLineEdit()
+        contact_number_input.setFixedSize(200, 30)
+        contact_number_input.setFont(font)
         email_label = QLabel("Email Address")
         email_input = QLineEdit()
-
+        email_input.setFixedSize(200, 30)
+        email_input.setFont(font)
+        
         # Create buttons
         submit_button = QPushButton("Submit")
         clear_button = QPushButton("Clear")
