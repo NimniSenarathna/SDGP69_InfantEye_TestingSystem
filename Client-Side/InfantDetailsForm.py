@@ -9,6 +9,7 @@ from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 class DetailsFormPage(QMainWindow):
     def __init__(self):
         super().__init__()
+        
         self.setWindowTitle("Infants Details Form")
         self.setFixedSize(1900, 1000)
         
@@ -115,6 +116,36 @@ class DetailsFormPage(QMainWindow):
 
         # Set the central widget to the form container
         self.setCentralWidget(form_container)
+        
+        # Connect the submit button to the submit_details function
+        submit_button.clicked.connect(self.submit_details)
+
+        # Establish a connection to the database
+        self.db = QSqlDatabase.addDatabase('QSQLITE')
+        self.db.setDatabaseName('infantsdetailsdatabase.db')
+        if not self.db.open():
+            print('Could not connect to database')
+            
+    def submit_details(self):
+        # Create a QSqlQuery object to insert the user details into the database
+        query = QSqlQuery()
+        query.prepare('INSERT INTO users (name, surname, gender, dob, test_id, parent_type, parent_name, nic_number, contact_number, email) '
+                  'VALUES (:name, :surname, :gender, :dob, :test_id, :parent_type, :parent_name, :nic_number, :contact_number, :email)')
+        query.bindValue(':name', self.first_name_input.text())
+        query.bindValue(':surname', self.surname_input.text())
+        query.bindValue(':gender', self.gender_input.text())
+        query.bindValue(':dob', self.dob_input.date().toString('yyyy-MM-dd'))
+        query.bindValue(':test_id', self.test_id_input.text())
+        query.bindValue(':parent_type', self.parent_type_input.text())
+        query.bindValue(':parent_name', self.parent_name_input.text())
+        query.bindValue(':nic_number', self.nic_number_input.text())
+        query.bindValue(':contact_number', self.contact_number_input.text())
+        query.bindValue(':email', self.email_input.text())
+        if query.exec_():
+           print('User details inserted into database')
+        else:
+           print('Error inserting user details into database:', query.lastError().text())
+
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
