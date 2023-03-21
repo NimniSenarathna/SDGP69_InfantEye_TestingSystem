@@ -72,6 +72,16 @@ class DetailsFormPage(QMainWindow):
         login_button = QPushButton("Return to LOGINPAGE")
         submit_button = QPushButton("Submit & start Testing")
         db_button = QPushButton("Select from existing database")
+        
+        # Change the color of the login button
+        login_button.setStyleSheet("background-color: #235FF9; color: white;")
+
+        # Change the color of the submit button
+        submit_button.setStyleSheet("background-color: #235FF9; color: white;")
+
+        # Change the color of the db button
+        db_button.setStyleSheet("background-color: #65C8FF; color: white;")
+
 
         # Add form elements and buttons to form container
         form_layout = QGridLayout()
