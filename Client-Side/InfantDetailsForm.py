@@ -11,13 +11,17 @@ class DetailsFormPage(QMainWindow):
         super().__init__()
         
         self.setWindowTitle("Infants Details Form")
-        self.setFixedSize(1900, 1000)
+        #self.setFixedSize(1900, 1000)
+        
+        # Set window size
+        self.setGeometry(100, 100, 800, 600)
         
         # Set the background color of the window to blue
         self.setStyleSheet("background-color: #D0DAFF;")
 
         # Create a container for the form
         form_container = QWidget()
+        
         form_container.setGeometry(QRect(0, 0, 800, 600))
         form_container.setObjectName("form_container")
         
@@ -36,7 +40,7 @@ class DetailsFormPage(QMainWindow):
         surname_input = QLineEdit()
         surname_input.setFixedSize(200, 30)
         surname_input.setFont(font)
-        gender_label = QLabel("Gender")
+        gender_label = QLabel("Gender*")
         gender_input = QLineEdit()
         gender_input.setFixedSize(200, 30)
         gender_input.setFont(font)
@@ -70,12 +74,12 @@ class DetailsFormPage(QMainWindow):
         email_input.setFont(font)
         
         # Create buttons
-        login_button = QPushButton("Return to LOGINPAGE")
+        self.login_button = QPushButton("Return to LOGINPAGE")
         submit_button = QPushButton("Submit & start Testing")
         db_button = QPushButton("Select from existing database")
         
         # Change the color of the login button
-        login_button.setStyleSheet("background-color: #235FF9; color: white;")
+        self.login_button.setStyleSheet("background-color: #235FF9; color: white;")
 
         # Change the color of the submit button
         submit_button.setStyleSheet("background-color: #235FF9; color: white;")
@@ -109,7 +113,7 @@ class DetailsFormPage(QMainWindow):
 
         # Add buttons to form container
         button_layout = QHBoxLayout()
-        button_layout.addWidget(login_button)
+        button_layout.addWidget(self.login_button)
         button_layout.addWidget(submit_button)
         button_layout.addWidget(db_button)
         form_layout.addLayout(button_layout, 9, 1, 1, 2)
