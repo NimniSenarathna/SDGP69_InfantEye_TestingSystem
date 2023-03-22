@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QLineEdit, QPushButton, QGridLayout, QHBoxLayout, QDateEdit
-from PyQt5.QtCore import QRect
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QLineEdit, QPushButton, QGridLayout, QHBoxLayout, QDateEdit, QCheckBox
+from PyQt5.QtCore import QRect, Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QFont
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
@@ -40,10 +40,14 @@ class DetailsFormPage(QMainWindow):
         surname_input = QLineEdit()
         surname_input.setFixedSize(200, 30)
         surname_input.setFont(font)
-        gender_label = QLabel("Gender*")
-        gender_input = QLineEdit()
-        gender_input.setFixedSize(200, 30)
-        gender_input.setFont(font)
+        gender_type_label = QLabel("Gender*")
+        gender_type_female = QCheckBox("Female")
+        gender_type_male = QCheckBox("Male")
+        gender_type_layout = QHBoxLayout()
+        gender_type_layout.addWidget(gender_type_female)
+        gender_type_layout.addWidget(gender_type_male)
+        gender_type_widget = QWidget()
+        gender_type_widget.setLayout(gender_type_layout)
         dob_label = QLabel("Date of Birth")
         dob_input = QDateEdit()
         dob_input.setFixedSize(200, 30)
@@ -52,10 +56,14 @@ class DetailsFormPage(QMainWindow):
         test_id_input = QLineEdit()
         test_id_input.setFixedSize(200, 30)
         test_id_input.setFont(font)
-        parent_type_label = QLabel("Parent Type")
-        parent_type_input = QLineEdit()
-        parent_type_input.setFixedSize(200, 30)
-        parent_type_input.setFont(font)
+        parent_type_label = QLabel("Parent Type*")
+        parent_type_mother = QCheckBox("Mother")
+        parent_type_father = QCheckBox("Father")
+        parent_type_layout = QHBoxLayout()
+        parent_type_layout.addWidget(parent_type_mother)
+        parent_type_layout.addWidget(parent_type_father)
+        parent_type_widget = QWidget()
+        parent_type_widget.setLayout(parent_type_layout)
         parent_name_label = QLabel("Parent's Full Name")
         parent_name_input = QLineEdit()
         parent_name_input.setFixedSize(200, 30)
@@ -72,6 +80,30 @@ class DetailsFormPage(QMainWindow):
         email_input = QLineEdit()
         email_input.setFixedSize(200, 30)
         email_input.setFont(font)
+        
+        # Define a custom method to validate the parent type checkboxes
+        def validate_gender_type(state):
+            sender = app.sender()
+            if sender == gender_type_female and state == Qt.Checked:
+                gender_type_male.setChecked(False)
+            elif sender == gender_type_male and state == Qt.Checked:
+               gender_type_female.setChecked(False)
+
+        # Connect the stateChanged signal of the parent type checkboxes to the validate_parent_type method
+        gender_type_female.stateChanged.connect(validate_gender_type)
+        gender_type_male.stateChanged.connect(validate_gender_type)
+        
+        # Define a custom method to validate the parent type checkboxes
+        def validate_parent_type(state):
+            sender = app.sender()
+            if sender == parent_type_mother and state == Qt.Checked:
+                parent_type_father.setChecked(False)
+            elif sender == parent_type_father and state == Qt.Checked:
+               parent_type_mother.setChecked(False)
+
+        # Connect the stateChanged signal of the parent type checkboxes to the validate_parent_type method
+        parent_type_mother.stateChanged.connect(validate_parent_type)
+        parent_type_father.stateChanged.connect(validate_parent_type)
         
         # Create buttons
         self.login_button = QPushButton("Return to LOGINPAGE")
@@ -93,14 +125,14 @@ class DetailsFormPage(QMainWindow):
         form_layout.addWidget(name_label, 0, 0)
         form_layout.addWidget(first_name_input, 0, 1)
         form_layout.addWidget(surname_input, 0, 2)
-        form_layout.addWidget(gender_label, 1, 0)
-        form_layout.addWidget(gender_input, 1, 1)
+        form_layout.addWidget(gender_type_label, 1, 0)
+        form_layout.addWidget(gender_type_widget, 1, 1)
         form_layout.addWidget(dob_label, 2, 0)
         form_layout.addWidget(dob_input, 2, 1)
         form_layout.addWidget(test_id_label, 3, 0)
         form_layout.addWidget(test_id_input, 3, 1)
         form_layout.addWidget(parent_type_label, 4, 0)
-        form_layout.addWidget(parent_type_input, 4, 1)
+        form_layout.addWidget(parent_type_widget, 4, 1)
         form_layout.addWidget(parent_name_label, 5, 0)
         form_layout.addWidget(parent_name_input, 5, 1)
         form_layout.addWidget(nic_number_label, 6, 0)
