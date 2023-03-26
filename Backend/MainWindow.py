@@ -52,6 +52,7 @@ def get_initial_details_of_center_of_the_eye(face_points, iris_points, eye_point
     reference_points = np.zeros((1, 3))
     start_time = time()
 
+    # Collect reference points for a specified delay time
     while time() - start_time < delay_time:
         points = face_points[iris_points]
         (x, y), radius = cv.minEnclosingCircle(points)
