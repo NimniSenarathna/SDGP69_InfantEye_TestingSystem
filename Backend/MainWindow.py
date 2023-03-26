@@ -21,6 +21,7 @@ def iris_details(points):
     return (r_x, r_y), r_radius
 
 
+# normalize distance of points
 def normalized_distance(distance, total_distance):
     return round((distance / total_distance), 2)
 
