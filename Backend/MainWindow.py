@@ -57,3 +57,15 @@ def get_initial_details_of_center_of_the_eye(face_points, iris_points, eye_point
         points = face_points[iris_points]
         (x, y), radius = cv.minEnclosingCircle(points)
         reference_points = np.append(reference_points, [[x, y, radius]], axis=0)
+
+    mean_reference_point = np.mean(reference_points, axis=0, dtype=np.int32)
+
+    width = euclidean_distance(face_points[eye_points[0]], face_points[eye_points[1]])
+    height = euclidean_distance(face_points[eye_points[2]], face_points[eye_points[3]])
+
+    center_to_left_corner_horizontal_width = euclidean_distance(mean_reference_point[:2],
+                                                                face_points[eye_points[0]]) / width + 1e-6
+    center_to_up_vertical_height = euclidean_distance(mean_reference_point[:2],
+                                                      face_points[eye_points[2]]) / height + 1e-6
+
+    return mean_reference_point, center_to_left_corner_horizontal_width, center_to_up_vertical_height
