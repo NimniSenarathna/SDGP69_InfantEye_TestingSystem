@@ -46,3 +46,12 @@ def polar_coordinates(point1, point2):
 
     return rho, theta
 
+def get_initial_details_of_center_of_the_eye(face_points, iris_points, eye_points, delay_time):
+    # Initialize an array to store reference points for a certain period of time
+    reference_points = np.zeros((1, 3))
+    start_time = time()
+
+    while time() - start_time < delay_time:
+        points = face_points[iris_points]
+        (x, y), radius = cv.minEnclosingCircle(points)
+        reference_points = np.append(reference_points, [[x, y, radius]], axis=0)
