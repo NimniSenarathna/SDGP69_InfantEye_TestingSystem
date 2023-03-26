@@ -46,6 +46,7 @@ def polar_coordinates(point1, point2):
 
     return rho, theta
 
+# get the initial details of the iris point
 def get_initial_details_of_center_of_the_eye(face_points, iris_points, eye_points, delay_time):
     # Initialize an array to store reference points for a certain period of time
     reference_points = np.zeros((1, 3))
