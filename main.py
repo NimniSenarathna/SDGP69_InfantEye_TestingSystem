@@ -1,5 +1,5 @@
 import sys
-
+import mysql.connector
 from PyQt6.QtCore import QDate
 from PyQt6.QtGui import QIcon, QPixmap, QIntValidator
 from PyQt6.QtSql import QSqlQuery, QSqlDatabase
@@ -16,23 +16,23 @@ class Login(QWidget):  ########Login Page##############
         self.window_width, self.window_height = 600, 350
         self.setFixedSize(self.window_width, self.window_height)
 
-        layout = QGridLayout()          ##Layout##
+        layout = QGridLayout()  ##Layout##
         fulllayout = QHBoxLayout()
         self.setLayout(fulllayout)
 
-        imglabel = QLabel(self)       ##image##
+        imglabel = QLabel(self)  ##image##
         pixmap = QPixmap('baby.jpg')
         imglabel.setPixmap(pixmap)
         fulllayout.addWidget(imglabel)
         fulllayout.addLayout(layout)
 
-        imglabel1 = QLabel(self)                ##Logo##
+        imglabel1 = QLabel(self)  ##Logo##
         pixmap = QPixmap('logoMINI.JPG')
         imglabel1.setPixmap(pixmap)
         imglabel1.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         layout.addWidget(imglabel1, 0, 2)
 
-        labels = {}                       ########Labels and Input fields####
+        labels = {}  ########Labels and Input fields####
         self.lineEdits = {}
 
         labels['Login'] = QLabel('Login')
@@ -61,52 +61,48 @@ class Login(QWidget):  ########Login Page##############
 
         layout.addWidget(labels['register'], 6, 0, 1, 2)
 
-        button_login = QPushButton('&Log In', clicked=self.checkcredential)            ####Login Button Click ######
+        button_login = QPushButton('&Log In', clicked=self.checkcredential)  ####Login Button Click ######
         layout.addWidget(button_login, 4, 2, 1, 1)
-        button_register = QPushButton('&Signup', clicked=self.open_second_gui)              ####Signup page button#####
+        button_register = QPushButton('&Signup', clicked=self.open_second_gui)  ####Signup page button#####
         layout.addWidget(button_register, 6, 2, 1, 1)
 
-        self.status = QLabel('')                                       #########Validate Error Message##########
+        self.status = QLabel('')  #########Validate Error Message##########
         self.status.setStyleSheet('font-size: 13px; color: red;')
         layout.addWidget(self.status, 4, 0, 1, 1)
 
-        self.connectToDB()
-
-    def connectToDB(self):                                     ######Connecting to DataBase########
-        # https://doc.qt.io/qt-5/sql-driver.html
-        db = QSqlDatabase.addDatabase('QMYSQL')
-        db.setDatabaseName('mysql+pymysql://root:localhost:3306/users')
-
-        if not db.open():
-            self.status.setText('Connection failed')
-
-    def checkcredential(self):                                           ##########Validate inputs##########
+    def checkcredential(self):  ########Validate Input#######
         username = self.lineEdits['Username'].text()
         password = self.lineEdits['Password'].text()
 
-        query = QSqlQuery()
-        query.prepare('SELECT * FROM Users WHERE Username=:username')
-        query.bindValue(':username', username)
-        query.exec()
+        cnx = mysql.connector.connect(host="localhost", user="root", password="", database="users")
+        cursor = cnx.cursor()
+        query = "SELECT * FROM `users`WHERE username= %s and User_password= %s "
+        value = (username, password)
+        cursor.execute(query, value)
+        results = cursor.fetchone()
+        self.lineEdits['Username'].setText("")
+        self.lineEdits['Password'].setText("")
+
         if len(username):
             if len(password):
-                if query.first():
-                    if query.value('Password') == password:
-                        print("works")
-                    else:
-                        self.status.setText('Password is incorrect')
+                if results:
+                    self.status.setText('all ok')
+                    # self.lineEdits['Username'].setText("")
+                    # self.lineEdits['Password'].setText("")
                 else:
-                    self.status.setText('User not found')
+                    self.status.setText('User or Password is wrong')
+                    # self.lineEdits['Username'].setText("")
+                    # self.lineEdits['Password'].setText("")
             else:
                 self.status.setText('enter password')
         else:
             self.status.setText('enter username')
 
-    def open_second_gui(self):                      #######Signup page open function#######
+    def open_second_gui(self):  #######Signup page open function#######
         stacked_widget.setCurrentIndex(1)
 
 
-class Signup(QWidget):             ########Signup Page#########
+class Signup(QWidget):  ########Signup Page#########
     def __init__(self):
         super().__init__()
 
@@ -115,38 +111,41 @@ class Signup(QWidget):             ########Signup Page#########
         self.window_width, self.window_height = 600, 400
         self.setFixedSize(self.window_width, self.window_height)
 
-        layout = QGridLayout()                             #####Layout#####
+        layout = QGridLayout()  #####Layout#####
         self.setLayout(layout)
 
-        labels = {}                                          ##########Labels and Input fields############
+        labels = {}  ##########Labels and Input fields############
         self.lineEdits = {}
 
-        labels['details'] = QLabel('details')
+        labels['details'] = QLabel('Enter your signup details here')
         labels['details'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+
+        labels['space'] = QLabel('')
+        labels['space'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 
         labels['Signup'] = QLabel('Signup')
         labels['Signup'].setStyleSheet('font-size: 25px; color: blue;')
         labels['Signup'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 
-        labels['name'] = QLabel('name')
+        labels['name'] = QLabel('Full name')
         labels['name'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        labels['username'] = QLabel('username')
+        labels['username'] = QLabel('Username')
         labels['username'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        labels['gender'] = QLabel('gender')
-        labels['dateofbirth'] = QLabel('dateofbirth')
+        labels['gender'] = QLabel('Gender')
+        labels['dateofbirth'] = QLabel('Date of birth')
         labels['gender'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         labels['dateofbirth'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        labels['nic'] = QLabel('nic')
-        labels['mobile'] = QLabel('mobile')
+        labels['nic'] = QLabel('Nic')
+        labels['mobile'] = QLabel('Mobile number')
         labels['nic'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         labels['mobile'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        labels['npassword'] = QLabel('npassword')
-        labels['cpassword'] = QLabel('cpassword')
+        labels['npassword'] = QLabel('New password')
+        labels['cpassword'] = QLabel('Confirm password')
         labels['npassword'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         labels['cpassword'].setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
 
-        self.lineEdits['details'] = QLineEdit()
-        self.lineEdits['details'].setPlaceholderText("Your details")
+        # self.lineEdits['details'] = QLineEdit()
+        # self.lineEdits['details'].setPlaceholderText("Your details")
         self.lineEdits['firstname'] = QLineEdit()
         self.lineEdits['firstname'].setPlaceholderText("First name")
         self.lineEdits['lastname'] = QLineEdit()
@@ -159,7 +158,7 @@ class Signup(QWidget):             ########Signup Page#########
         self.lineEdits['dateofbirth'] = QLineEdit()
         self.lineEdits['dateofbirth'].setPlaceholderText("YYYY-MM-DD")
 
-        validator = QIntValidator()                 ########Integer Validator########
+        validator = QIntValidator()  ########Integer Validator########
 
         self.lineEdits['nic'] = QLineEdit()
         self.lineEdits['nic'].setPlaceholderText("Nic number")
@@ -173,7 +172,7 @@ class Signup(QWidget):             ########Signup Page#########
         self.lineEdits['cpassword'].setEchoMode(QLineEdit.EchoMode.Password)
         self.lineEdits['cpassword'].setPlaceholderText("Confirm Password")
 
-        imglabel1 = QLabel(self)                                   #######Logo#######
+        imglabel1 = QLabel(self)  #######Logo#######
         pixmap = QPixmap('logoMINI.JPG')
         imglabel1.setPixmap(pixmap)
         imglabel1.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
@@ -181,7 +180,8 @@ class Signup(QWidget):             ########Signup Page#########
 
         layout.addWidget(labels['Signup'], 0, 0, 2, 1)
         layout.addWidget(labels['details'], 2, 0, 1, 1)
-        layout.addWidget(self.lineEdits['details'], 3, 0, 1, 5)
+        # layout.addWidget(self.lineEdits['details'], 3, 0, 1, 5)
+        layout.addWidget(labels['space'], 3, 0, 1, 1)
         layout.addWidget(labels['name'], 4, 0, 1, 1)
         layout.addWidget(self.lineEdits['firstname'], 4, 1, 1, 2)
         layout.addWidget(self.lineEdits['lastname'], 4, 3, 1, 2)
@@ -202,18 +202,18 @@ class Signup(QWidget):             ########Signup Page#########
         layout.addWidget(labels['cpassword'], 11, 0, 1, 1)
         layout.addWidget(self.lineEdits['cpassword'], 11, 1, 1, 2)
 
-        button_Signup = QPushButton('&Signup', clicked=self.checkcredential)        ########Button to Signup######
+        button_Signup = QPushButton('&Signup', clicked=self.checkcredential)  ########Button to Signup######
         layout.addWidget(button_Signup, 12, 4, 1, 1)
 
-        button_Register = QPushButton('&Return login', clicked=self.go_back)         #######Button to first page########
+        button_Register = QPushButton('&Return login', clicked=self.go_back)  #######Button to first page########
         layout.addWidget(button_Register, 12, 3, 1, 1)
 
-        self.status = QLabel('')                              ########Validate Error Message#######
+        self.status = QLabel('')  ########Validate Error Message#######
         self.status.setStyleSheet('font-size: 13px; color: red;')
         layout.addWidget(self.status, 13, 0, 1, 2)
 
-    def checkcredential(self):                                       ########Validate Inputs########
-        details = self.lineEdits['details'].text()
+    def checkcredential(self):  ########Validate Input#######
+        # details = self.lineEdits['details'].text()
         firstname = self.lineEdits['firstname'].text()
         lastname = self.lineEdits['lastname'].text()
         username = self.lineEdits['username'].text()
@@ -225,51 +225,105 @@ class Signup(QWidget):             ########Signup Page#########
         npassword = self.lineEdits['npassword'].text()
         cpassword = self.lineEdits['cpassword'].text()
 
-        if len(details) > 0:
-            if len(firstname) > 0:
-                if len(lastname) > 0:
-                    if len(username) > 0:
-                        if len(gender) > 0:
-                            if gender.lower() == 'male' or gender.lower() == 'female' or gender.lower() == 'prefer not to say':
-                                if len(dateofbirth) > 0:
-                                    if date.isValid():
-                                        if len(nic) > 0:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="users"
+        )
+
+        # Create a cursor object to execute SQL queries
+        cursor = conn.cursor()
+
+        query1 = "SELECT username FROM `users`WHERE username= %s and nic_number= %s "
+        value1 = (username, nic)
+        cursor.execute(query1, value1)
+        results = cursor.fetchone()
+
+        # if len(details) > 0:
+        if len(firstname) > 0:
+            if len(lastname) > 0:
+                if len(username) > 0:
+                    if len(gender) > 0:
+                        if gender.lower() == 'male' or gender.lower() == 'female' or gender.lower() == 'prefer not to say':
+                            if len(dateofbirth) > 0:
+                                if date.isValid():
+                                    if len(nic) > 0:
+                                        if not results:
                                             if len(mobile) > 0:
                                                 if len(npassword) > 0:
                                                     if len(npassword) >= 4:
                                                         if len(cpassword) > 0:
                                                             if npassword == cpassword:
                                                                 self.status.setText('all ok')
+                                                                query = "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                                                                values = (
+                                                                    firstname, lastname, username, npassword, mobile,
+                                                                    nic, dateofbirth, gender)
+
+                                                                # Execute the query
+                                                                cursor.execute(query, values)
+
+                                                                # Commit the changes to the database
+                                                                conn.commit()
+                                                                # self.lineEdits['details'].setText("")
+                                                                self.lineEdits['firstname'].setText("")
+                                                                self.lineEdits['lastname'].setText("")
+                                                                self.lineEdits['username'].setText("")
+                                                                self.lineEdits['gender'].setText("")
+                                                                self.lineEdits['dateofbirth'].setText("")
+                                                                self.lineEdits['nic'].setText("")
+                                                                self.lineEdits['mobile'].setText("")
+                                                                self.lineEdits['npassword'].setText("")
+                                                                self.lineEdits['cpassword'].setText("")
                                                             else:
                                                                 self.status.setText("confirm password dosn't match")
+                                                                self.lineEdits['cpassword'].setText("")
                                                         else:
                                                             self.status.setText('confirm password')
+                                                            self.lineEdits['cpassword'].setText("")
                                                     else:
                                                         self.status.setText('password must be more than 4 digits')
+                                                        self.lineEdits['npassword'].setText("")
                                                 else:
                                                     self.status.setText('enter new password')
+                                                    self.lineEdits['npassword'].setText("")
                                             else:
                                                 self.status.setText('enter mobile number')
+                                                self.lineEdits['mobile'].setText("")
                                         else:
-                                            self.status.setText('enter nic')
+                                            self.status.setText('User name or NIC already exist')
+                                            self.lineEdits['username'].setText("")
+                                            self.lineEdits['nic'].setText("")
                                     else:
-                                        self.status.setText('invalid date')
+                                        self.status.setText('enter nic')
+                                        self.lineEdits['nic'].setText("")
                                 else:
-                                    self.status.setText('enter date')
+                                    self.status.setText('invalid date')
+                                    self.lineEdits['dateofbirth'].setText("")
                             else:
-                                self.status.setText('not valid')
+                                self.status.setText('enter date')
+                                self.lineEdits['dateofbirth'].setText("")
                         else:
-                            self.status.setText('enter gender')
+                            self.status.setText('not valid')
+                            self.lineEdits['gender'].setText("")
                     else:
-                        self.status.setText('enter username')
+                        self.status.setText('enter gender')
+                        self.lineEdits['gender'].setText("")
                 else:
-                    self.status.setText('enter lastname')
+                    self.status.setText('enter username')
+                    self.lineEdits['username'].setText("")
             else:
-                self.status.setText('enter firstname')
+                self.status.setText('enter lastname')
+                self.lineEdits['lastname'].setText("")
         else:
-            self.status.setText('enter details')
+            self.status.setText('enter firstname')
+            self.lineEdits['firstname'].setText("")
+        # else:
+        #     self.status.setText('enter details')
+        #     self.lineEdits['details'].setText("")
 
-    def go_back(self):                             ###########Function to previous page############
+    def go_back(self):  ###########Function to previous page############
         stacked_widget.setCurrentIndex(0)
 
 
@@ -283,7 +337,10 @@ if __name__ == '__main__':
 
     stacked_widget.addWidget(first_gui)
     stacked_widget.addWidget(second_gui)
+    # self.window_width, self.window_height = 600, 350
+    stacked_widget.setFixedSize(600, 400)
 
     stacked_widget.show()
 
     sys.exit(app.exec())
+
