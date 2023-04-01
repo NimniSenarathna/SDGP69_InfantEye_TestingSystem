@@ -75,6 +75,7 @@ def get_initial_details_of_center_of_the_eye(face_points, iris_points, eye_point
 
 
 def current_position_details(face_points):
+    # "minEnclosingCircle" opencv for finding the smallest circle
     (x, y), radius = cv.minEnclosingCircle(face_points)
     return [int(x), int(y), int(radius)]
 
