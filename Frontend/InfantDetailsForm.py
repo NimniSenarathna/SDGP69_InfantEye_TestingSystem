@@ -83,7 +83,7 @@ class MyPage(QWidget):
         container.setLayout(container_layout)
 
         # Create the form layout
-        form_layout = QFormLayout()
+        #form_layout = QFormLayout()
 
         # Create form elements
         name_label = QLabel("Name*")
