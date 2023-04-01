@@ -85,4 +85,11 @@ def filter_current_position(current_point, reference_point):
     if rho < 0.2:
         position_vector[0] = 1
         # print("center")
+    if rho > 0.2 and 160 < theta < 200:
+        position_vector[1] = 1
+        # print("left")
+    if rho > 0.2 and 0 <= theta <= 20 or 340 <= theta <= 360:
+        position_vector[2] = 1
+        # print("right")
+    return position_vector
 
