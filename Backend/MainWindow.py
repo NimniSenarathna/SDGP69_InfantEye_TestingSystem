@@ -72,3 +72,9 @@ def get_initial_details_of_center_of_the_eye(face_points, iris_points, eye_point
                                                       face_points[eye_points[2]]) / height + 1e-6
 
     return mean_reference_point, center_to_left_corner_horizontal_width, center_to_up_vertical_height
+
+
+def current_position_details(face_points):
+    (x, y), radius = cv.minEnclosingCircle(face_points)
+    return [int(x), int(y), int(radius)]
+
