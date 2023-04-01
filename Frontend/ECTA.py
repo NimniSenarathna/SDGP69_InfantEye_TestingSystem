@@ -1,76 +1,69 @@
-class MainWindow(QMainWindow):
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+import math
+import sys
+from PyQt5.QtWidgets import QApplication, QGraphicsScene, QGraphicsView, QGraphicsRectItem, \
+    QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtCore import QTimer, QPointF, QRectF, Qt
 
-        uic.loadUi('main.ui', self)
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
 
-        self.vector = np.zeros(9)
-        self.x = 550
-        self.y = 275
+        # Set up the graphics view and scene
+        self.view = QGraphicsView()
+        self.scene = QGraphicsScene()
+        self.view.setScene(self.scene)
 
-        self.pushButtonStart.clicked.connect(self.start)
-        self.pushButtonStop.clicked.connect(self.stop)
-        self.pushButtonPause.clicked.connect(self.pause)
+        # Set up the square item
+        self.square = QGraphicsRectItem(QRectF(0, 0, 50, 50))
+        self.square.setBrush(Qt.red)
+        self.scene.addItem(self.square)
 
-        self.Image_label = QLabel(self)
-        self.Image_label.setGeometry(self.x, self.y, 100, 100)
-        self.Image_label.setPixmap(QPixmap("butterfly.png").scaled(100, 100))
+        # Set up the timer and angle
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.animate)
+        self.angle = 0
 
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_position)
+        # Set up the buttons
+        self.start_button = QPushButton('Start')
+        self.start_button.clicked.connect(self.start_animation)
+        self.pause_button = QPushButton('Pause')
+        self.pause_button.clicked.connect(self.pause_animation)
+        self.stop_button = QPushButton('Stop')
+        self.stop_button.clicked.connect(self.stop_animation)
 
-        self.thread_process = process_thread()
-        self.thread_process.position_vector_signal.connect(self.get_information)
+        # Set up the layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.view)
+        layout.addWidget(self.start_button)
+        layout.addWidget(self.pause_button)
+        layout.addWidget(self.stop_button)
+        self.setLayout(layout)
 
-        self.result_left = result("left")
-        self.result_right = result("right")
+    def start_animation(self):
+        self.timer.start(20)
 
-    def start(self):
-        self.thread_process.start_process()
-        self.result_left.start_get_result()
-        self.result_right.start_get_result()
-        s_time = time()
-        while time() - s_time < 8:
-            continue
-        self.x = 0
-        self.y = 0
-        self.timer.start(100)
-
-    def stop(self):
-        self.timer.stop()
-        self.x = 550
-        self.y = 275
-        self.Image_label.move(self.x, self.y)
-        self.thread_process.stop_process()
-        self.result_left.cal_result()
-        self.result_right.cal_result()
-        # self.result_left.stop_get_result()
-        # self.result_right.stop_get_result()
-        print("stop")
-
-    def pause(self):
-        # Pause the timer
+    def pause_animation(self):
         if self.timer.isActive():
             self.timer.stop()
         else:
-            self.timer.start(10)
+            self.timer.start(20)
 
-    def update_position(self):
-        # Move the object in a square shape
-        if self.x < 1150 and self.y == 0:
-            self.x += 5
-        elif self.x == 1150 and self.y < 570:
-            self.y += 5
-        elif self.x > 0 and self.y == 570:
-            self.x -= 5
-        elif self.x == 0 and self.y > 0:
-            self.y -= 5
+    def stop_animation(self):
+        self.timer.stop()
+        self.square.setPos(QPointF(0, 0))
+        self.angle = 0
 
-        # Set the position of the object
-        self.Image_label.move(self.x, self.y)
-        center = (550, 275, 275)
-        self.vector = filter_current_position((self.x, self.y, 275), center)
+    def animate(self):
+        # Calculate the new position of the square
+        x = 100 * (1 - pow(self.angle / 360, 2)) * pow(math.sin(math.radians(self.angle)), 3)
+        y = 100 * (1 - pow(self.angle / 360, 2)) * pow(math.cos(math.radians(self.angle)), 3)
+        self.square.setPos(QPointF(x, y))
 
-    def get_information(self, left_vector, right_vector):
-        self.result_left.process(left_vector, self.vector)
-        self.result_right.process(right_vector, self.vector)
+        # Update the angle
+        self.angle += 2
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
