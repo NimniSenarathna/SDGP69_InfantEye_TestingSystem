@@ -258,7 +258,7 @@ class MyPage(QWidget):
 
 
             
-if _name__ == '__main__':
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     page = MyPage()
     page.show()
