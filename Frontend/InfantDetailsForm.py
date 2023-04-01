@@ -56,7 +56,7 @@ class MyPage(QWidget):
 
         # Create the icon widget and add it to the container layout
         icon = QLabel(self)               
-        pixmap = QPixmap('ECTALogo.png').scaledToHeight(90) # Set the height of the pixmap to 50 pixels
+        #pixmap = QPixmap('ECTALogo.png').scaledToHeight(90) # Set the height of the pixmap to 50 pixels
         pixmap = pixmap.scaled(pixmap.width() // 2, pixmap.height() // 2)
         icon.setPixmap(pixmap)
         icon.setAlignment(Qt.AlignmentFlag.AlignTop) # Align the icon to the top
