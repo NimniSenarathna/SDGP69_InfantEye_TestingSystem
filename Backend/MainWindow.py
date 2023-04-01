@@ -82,4 +82,7 @@ def current_position_details(face_points):
 def filter_current_position(current_point, reference_point):
     position_vector = np.zeros(9)
     rho, theta = polar_coordinates(current_point, reference_point)
+    if rho < 0.2:
+        position_vector[0] = 1
+        # print("center")
 
