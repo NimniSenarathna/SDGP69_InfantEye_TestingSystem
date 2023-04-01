@@ -79,3 +79,7 @@ def current_position_details(face_points):
     (x, y), radius = cv.minEnclosingCircle(face_points)
     return [int(x), int(y), int(radius)]
 
+def filter_current_position(current_point, reference_point):
+    position_vector = np.zeros(9)
+    rho, theta = polar_coordinates(current_point, reference_point)
+
