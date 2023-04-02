@@ -106,7 +106,9 @@ def filter_current_position(current_point, reference_point):
     if rho > 0.2 and 200 < theta < 250:
         position_vector[7] = 1
         # print("left lower")
-
+    if rho > 0.2 and 290 < theta < 340:
+        position_vector[8] = 1
+        # print("right lower")
     return position_vector
 
 
