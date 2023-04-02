@@ -203,21 +203,21 @@ class MyPage(QWidget):
         cursor = conn.cursor()
         cursor.execute("SHOW DATABASES")
         databases = [x[0] for x in cursor]
-        if "yourdatabase" not in databases:
+        if "InfantsDatabase" not in databases:
             # Create the database
-            cursor.execute("CREATE DATABASE yourdatabase")
+            cursor.execute("CREATE DATABASE InfantsDatabase")
             print("Database created")
 
         # Use the database
-        conn.database = "yourdatabase"
+        conn.database = "InfantsDatabase"
 
         # Check if the table exists
         cursor.execute("SHOW TABLES")
         tables = [x[0] for x in cursor]
-        if "yourtable" not in tables:
+        if "InfantsTable" not in tables:
             # Create the table
             cursor.execute("""
-                CREATE TABLE yourtable (
+                CREATE TABLE InfantsTable (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(255) NOT NULL,
                     gender VARCHAR(255) NOT NULL,
@@ -253,12 +253,12 @@ class MyPage(QWidget):
             host="localhost",
             user="root",
             password="",
-            database="yourdatabase"
+            database="InfantsDatabase"
         )
 
         # Insert the data into the table
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO yourtable (name,gender,dob,test_id,parent_type,parent_name,nic_number,contact_number,email) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", (name,gender,dob,test_id,parent_type,parent_name,nic_number,contact_number,email,))
+        cursor.execute("INSERT INTO InfantsTable (name,gender,dob,test_id,parent_type,parent_name,nic_number,contact_number,email) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", (name,gender,dob,test_id,parent_type,parent_name,nic_number,contact_number,email,))
         conn.commit()
         print("Data inserted")
 
@@ -272,4 +272,5 @@ if __name__ == '__main__':
     page = MyPage()
     page.show()
     sys.exit(app.exec())
+
 
