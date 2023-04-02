@@ -95,16 +95,12 @@ class MyPage(QWidget):
         self.surname_input = QLineEdit()
         self.surname_input.setFixedSize(200, 30)
         self.surname_input.setFont(QFont())
-        gender_type_label = QLabel("Gender*")
-        self.gender_type_female = QCheckBox("Female")
-        self.gender_type_male = QCheckBox("Male")
-        self.gender_type_layout = QHBoxLayout()
-        self.gender_type_layout.addWidget(self.gender_type_female)
-        self.gender_type_layout.addWidget(self.gender_type_male)
-        self.gender_type_widget = QWidget()
-        self.gender_type_widget.setLayout(self.gender_type_layout)
+        gender_label = QLabel("Gender*")
+        self.gender_input = QLineEdit()
+        self.gender_input.setFixedSize(200, 30)
+        self.gender_input.setFont(QFont())
         dob_label = QLabel("Date of Birth*")
-        self.dob_input = QDateEdit()
+        self.dob_input = QLineEdit()
         self.dob_input.setFixedSize(200, 30)
         self.dob_input.setFont(QFont())
         test_id_label = QLabel("Test ID*")
@@ -112,13 +108,9 @@ class MyPage(QWidget):
         self.test_id_input.setFixedSize(200, 30)
         self.test_id_input.setFont(QFont())
         parent_type_label = QLabel("Parent Type*")
-        self.parent_type_mother = QCheckBox("Mother")
-        self.parent_type_father = QCheckBox("Father")
-        self.parent_type_layout = QHBoxLayout()
-        self.parent_type_layout.addWidget(self.parent_type_mother)
-        self.parent_type_layout.addWidget(self.parent_type_father)
-        self.parent_type_widget = QWidget()
-        self.parent_type_widget.setLayout(self.parent_type_layout)
+        self.parent_type_input = QLineEdit()
+        self.parent_type_input.setFixedSize(200, 30)
+        self.parent_type_input.setFont(QFont())
         parent_name_label = QLabel("Parent's Full Name*")
         self.parent_name_input = QLineEdit()
         self.parent_name_input.setFixedSize(200, 30)
@@ -135,6 +127,7 @@ class MyPage(QWidget):
         self.email_input = QLineEdit()
         self.email_input.setFixedSize(200, 30)
         self.email_input.setFont(QFont())
+        
 
         # Create buttons
         self.login_button = QPushButton("Return to LOGINPAGE")
@@ -143,20 +136,29 @@ class MyPage(QWidget):
 
         # Connect button to function
         self.submit_button.clicked.connect(self.submit_data)
+        
+        # Change the color of the login button
+        self.login_button.setStyleSheet("background-color: #235FF9; color: white;")
+
+        # Change the color of the submit button
+        self.submit_button.setStyleSheet("background-color: #235FF9; color: white;")
+
+        # Change the color of the db button
+        db_button.setStyleSheet("background-color: #65C8FF; color: white;")
 
         # Add form elements and buttons to form container
         form_layout = QGridLayout()
         form_layout.addWidget(name_label, 0, 0)
         form_layout.addWidget(self.first_name_input, 0, 1)
         form_layout.addWidget(self.surname_input, 0, 2)
-        form_layout.addWidget(gender_type_label, 1, 0)
-        form_layout.addWidget(self.gender_type_widget, 1, 1)
+        form_layout.addWidget(gender_label, 1, 0)
+        form_layout.addWidget(self.gender_input, 1, 1)
         form_layout.addWidget(dob_label, 2, 0)
         form_layout.addWidget(self.dob_input, 2, 1)
         form_layout.addWidget(test_id_label, 3, 0)
         form_layout.addWidget(self.test_id_input, 3, 1)
         form_layout.addWidget(parent_type_label, 4, 0)
-        form_layout.addWidget(self.parent_type_widget, 4, 1)
+        form_layout.addWidget(self.parent_type_input, 4, 1)
         form_layout.addWidget(parent_name_label, 5, 0)
         form_layout.addWidget(self.parent_name_input, 5, 1)
         form_layout.addWidget(nic_number_label, 6, 0)
@@ -173,6 +175,9 @@ class MyPage(QWidget):
         button_layout.addWidget(db_button)
         form_layout.addLayout(button_layout, 9, 1, 1, 2)
 
+        # Set the layout for the page
+        #self.setLayout(form_layout)
+        
         # Add the form layout to the container layout
         container_layout.addLayout(form_layout)
 
@@ -234,10 +239,10 @@ class MyPage(QWidget):
     def submit_data(self):
         # Get the data from the form
         name = self.first_name_input.text() + " " + self.surname_input.text()
-        gender = self.gender_type_widget.currentText()
+        gender = self.gender_input.text()
         dob = self.dob_input.text()
         test_id = self.test_id_input.text()
-        parent_type = self.parent_type_widget.currentText()
+        parent_type = self.parent_type_input.text()
         parent_name = self.parent_name_input.text()
         nic_number = self.nic_number_input.text()
         contact_number = self.contact_number_input.text()
@@ -253,7 +258,7 @@ class MyPage(QWidget):
 
         # Insert the data into the table
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO yourtable (name, gender, dob, test_id, parent_type, parent_name, nic_number, contact_number, email) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (name, gender, dob, test_id, parent_type, parent_name, nic_number, contact_number, email,))
+        cursor.execute("INSERT INTO yourtable (name,gender,dob,test_id,parent_type,parent_name,nic_number,contact_number,email) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", (name,gender,dob,test_id,parent_type,parent_name,nic_number,contact_number,email,))
         conn.commit()
         print("Data inserted")
 
