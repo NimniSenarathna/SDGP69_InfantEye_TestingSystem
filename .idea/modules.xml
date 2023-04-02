@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/SDGP_Commits.iml" filepath="$PROJECT_DIR$/.idea/SDGP_Commits.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/SDGP Commits.iml" filepath="$PROJECT_DIR$/.idea/SDGP Commits.iml" />
+>>>>>>> a32e787179b6266367643fc45ea9c4d8f49c5f4b
     </modules>
   </component>
 </project>
