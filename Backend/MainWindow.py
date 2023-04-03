@@ -181,6 +181,10 @@ class MainWindow(QMainWindow):
                 self.x += 5
             elif self.x == 1150 and self.y < 570:
                 self.y += 5
+            elif self.x > 0 and self.y == 570:
+                self.x -= 5
+            elif self.x == 0 and self.y > 0:
+                self.y -= 5
 
 
 
