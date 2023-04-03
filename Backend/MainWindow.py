@@ -138,3 +138,7 @@ class MainWindow(QMainWindow):
         self.result_left = result("left")
         self.result_right = result("right")
 
+
+        def start(self):
+            self.thread_process.start_process()
+
