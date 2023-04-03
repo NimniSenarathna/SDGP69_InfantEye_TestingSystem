@@ -117,5 +117,9 @@ class MainWindow(QMainWindow):
 
         uic.loadUi('main.ui', self)
 
+        self.vector = np.zeros(9)
+        self.x = 550
+        self.y = 275
+
 
 
