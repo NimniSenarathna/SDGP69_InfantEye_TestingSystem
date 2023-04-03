@@ -154,5 +154,20 @@ class MainWindow(QMainWindow):
 
             self.x = 0
             self.y = 0
+            self.timer.start(100)
+
+        # stop button
+        def stop(self):
+            self.timer.stop()
+            self.x = 550
+            self.y = 275
+            self.Image_label.move(self.x, self.y)
+            self.thread_process.stop_process()
+            self.result_left.cal_result()
+            self.result_right.cal_result()
+            print("stop")
+
+
+
 
 
