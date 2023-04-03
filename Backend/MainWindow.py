@@ -125,5 +125,9 @@ class MainWindow(QMainWindow):
         self.pushButtonStop.clicked.connect(self.stop)
         self.pushButtonPause.clicked.connect(self.pause)
 
+        self.Image_label = QLabel(self)
+        self.Image_label.setGeometry(self.x, self.y, 100, 100)
+        self.Image_label.setPixmap(QPixmap("butterfly.png").scaled(100, 100))
+
 
 
