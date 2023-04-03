@@ -135,3 +135,6 @@ class MainWindow(QMainWindow):
         self.thread_process = process_thread()
         self.thread_process.position_vector_signal.connect(self.get_information)
 
+        self.result_left = result("left")
+        self.result_right = result("right")
+
