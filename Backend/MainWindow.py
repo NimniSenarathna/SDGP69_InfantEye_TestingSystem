@@ -191,6 +191,10 @@ class MainWindow(QMainWindow):
             center = (550, 275, 275)
             self.vector = filter_current_position((self.x, self.y, 275), center)
 
+        # extracting values from the 2 vectors
+        def get_information(self, left_vector, right_vector):
+            self.result_left.process(left_vector, self.vector)
+            self.result_right.process(right_vector, self.vector)
 
 
 
