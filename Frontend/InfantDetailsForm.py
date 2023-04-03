@@ -196,17 +196,17 @@ class MyPage(QWidget):
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="",
-            
+            password=""
         )
 
-        # Drop the database if it exists
+        # Check if the database exists
         cursor = conn.cursor()
-        cursor.execute("DROP DATABASE IF EXISTS InfantsDatabase")
-
-        # Create the database
-        cursor.execute("CREATE DATABASE InfantsDatabase")
-        print("Database created")
+        cursor.execute("SHOW DATABASES")
+        databases = [x[0] for x in cursor]
+        if "InfantsDatabase" not in databases:
+            # Create the database
+            cursor.execute("CREATE DATABASE InfantsDatabase")
+            print("Database created")
 
         # Use the database
         conn.database = "InfantsDatabase"
