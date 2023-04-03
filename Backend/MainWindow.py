@@ -186,6 +186,7 @@ class MainWindow(QMainWindow):
             elif self.x == 0 and self.y > 0:
                 self.y -= 5
 
+            # Set the position of the object
             self.Image_label.move(self.x, self.y)
             center = (550, 275, 275)
             self.vector = filter_current_position((self.x, self.y, 275), center)
