@@ -151,5 +151,6 @@ class MainWindow(QMainWindow):
 
             self.x = 0
             self.y = 0
-
+            
+            self.timer.start(100)
 
