@@ -129,5 +129,7 @@ class MainWindow(QMainWindow):
         self.Image_label.setGeometry(self.x, self.y, 100, 100)
         self.Image_label.setPixmap(QPixmap("butterfly.png").scaled(100, 100))
 
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_position)
 
 
