@@ -132,4 +132,6 @@ class MainWindow(QMainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_position)
 
+        self.thread_process = process_thread()
+        self.thread_process.position_vector_signal.connect(self.get_information)
 
