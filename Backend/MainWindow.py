@@ -121,5 +121,9 @@ class MainWindow(QMainWindow):
         self.x = 550
         self.y = 275
 
+        self.pushButtonStart.clicked.connect(self.start)
+        self.pushButtonStop.clicked.connect(self.stop)
+        self.pushButtonPause.clicked.connect(self.pause)
+
 
 
