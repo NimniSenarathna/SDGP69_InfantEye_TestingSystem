@@ -167,6 +167,12 @@ class MainWindow(QMainWindow):
             self.result_right.cal_result()
             print("stop")
 
+        def pause(self):
+            if self.timer.isActive():
+                self.timer.stop()
+            else:
+                self.timer.start(10)
+
 
 
 
