@@ -1,40 +1,33 @@
-import sys
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QLabel
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QWidget, QHBoxLayout, QPushButton
-from mysql.connector import connect
+import mysql.connector
 
-
-class TablePage(QMainWindow):
+class MyWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Table Page")
-        self.setGeometry(100, 100, 800, 600)
-        self.setStyleSheet("background-color: #D0DAFF;")
 
-        central_widget = QWidget(self)
-        self.setCentralWidget(central_widget)
+        # Initialize UI
+        self.initUI()
 
-        container = QTableWidget(central_widget)
-        container.setGeometry(50, 50, 700, 500)
-        container.setStyleSheet("background-color: white;")
+    def initUI(self):
+        # Create main layout
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0,0,0,0)
 
-        button_container = QWidget(central_widget)
-        button_container.setGeometry(50, 550, 700, 50)
+        # Set background color of main widget to blue
+        self.setStyleSheet("background-color: blue;")
 
-        login_button = QPushButton("Return to LOGINPAGE", button_container)
-        login_button.setGeometry(0, 0, 200, 50)
-        login_button.setStyleSheet("background-color: #D9D9D9; color: #000000;")
+        # Create container widget
+        container_widget = QWidget()
 
-        start_button = QPushButton("SELECT & START TESTING", button_container)
-        start_button.setGeometry(250, 0, 200, 50)
-        start_button.setStyleSheet("background-color: #D9D9D9; color: #000000;")
+        # Set background color of container widget and table widget to white
+        container_widget.setStyleSheet("background-color: white;")
+        table_widget = QTableWidget()
+        table_widget.setStyleSheet("background-color: white;")
 
-        home_button = QPushButton("RETURN TO HOMEPAGE", button_container)
-        home_button.setGeometry(500, 0, 200, 50)
-        home_button.setStyleSheet("background-color: #D9D9D9; color: #000000;")
-
+        # Connect to database and populate table
         try:
-            connection = connect(
+            connection = mysql.connector.connect(
                 host="localhost",
                 user="root",
                 password="",
@@ -48,17 +41,14 @@ class TablePage(QMainWindow):
 
             print("Number of rows returned:", num_rows)
 
-            container.setRowCount(num_rows)
-            container.setColumnCount(10)
-            container.setHorizontalHeaderLabels(["id", "name", "gender", "dob", "test_id", "parent_type", "parent_name", "nic_number", "contact_number", "email"])
+            table_widget.setRowCount(num_rows)
+            table_widget.setColumnCount(10)
+            table_widget.setHorizontalHeaderLabels(["id", "name", "gender", "dob", "test_id", "parent_type", "parent_name", "nic_number", "contact_number", "email"])
 
             for i, row in enumerate(rows):
                 for j, value in enumerate(row):
                     item = QTableWidgetItem(str(value))
-                    if j in [0, 1, 9]:
-                        item.setFlags(item.flags() & ~Qt.ItemIsSelectable)
-                        item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                    container.setItem(i, j, item)
+                    table_widget.setItem(i, j, item)
 
         except Exception as e:
             print("Database connection failed:", e)
@@ -67,10 +57,43 @@ class TablePage(QMainWindow):
             if connection:
                 connection.close()
 
+        # Create heading label
+        heading_label = QLabel("Ecta Infant Database")
+        heading_label.setStyleSheet("font-size: 20px; font-weight: bold; margin-top: 10px; margin-bottom: 10px;")
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    page = TablePage()
-    page.show()
-    sys.exit(app.exec())
+        # Create button layout
+        button_layout = QHBoxLayout()
 
+        # Create buttons
+        login_button = QPushButton("Return to LOGINPAGE")
+        testing_button = QPushButton("SELECT & START TESTING")
+        home_button = QPushButton("RETURN TO HOME PAGE")
+
+        # Set background color of buttons to gray
+        login_button.setStyleSheet("background-color: #D9D9D9;")
+        testing_button.setStyleSheet("background-color: #D9D9D9;")
+        home_button.setStyleSheet("background-color: #D9D9D9;")
+
+        # Add buttons to button layout
+        button_layout.addWidget(login_button)
+        button_layout.addWidget(testing_button)
+        button_layout.addWidget(home_button)
+
+        # Add heading label, table widget, and button layout to container widget
+        container_layout = QVBoxLayout()
+        container_layout.addWidget(heading_label)
+        container_layout.addWidget(table_widget)
+        container_layout.addLayout(button_layout)
+        container_widget.setLayout(container_layout)
+
+        # Add container widget to main layout
+        layout.addWidget(container_widget)
+
+        # Set main layout for widget
+        self.setLayout(layout)
+
+if __name__ == '__main__':
+    app = QApplication([])
+    ex = MyWidget()
+    ex.show()
+    app.exec()
