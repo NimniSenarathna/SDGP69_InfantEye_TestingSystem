@@ -145,4 +145,7 @@ class MainWindow(QMainWindow):
             self.result_left.start_get_result()
             self.result_right.start_get_result()
 
+            s_time = time()
+            while time() - s_time < 8:
+                continue
 
