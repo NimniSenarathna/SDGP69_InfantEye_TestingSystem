@@ -149,3 +149,7 @@ class MainWindow(QMainWindow):
             while time() - s_time < 8:
                 continue
 
+            self.x = 0
+            self.y = 0
+
+
