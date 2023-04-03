@@ -5,6 +5,9 @@ import cv2 as cv
 import json
 import math
 from time import time, sleep
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 
 with open("parameters.json", "r") as read_file:
     param = json.load(read_file)
