@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QLabel
-from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPainter, QColor
 import mysql.connector
 
 class MyWidget(QWidget):
@@ -12,10 +12,6 @@ class MyWidget(QWidget):
     def initUI(self):
         # Create main layout
         layout = QVBoxLayout()
-        layout.setContentsMargins(0,0,0,0)
-
-        # Set background color of main widget to blue
-        self.setStyleSheet("background-color: blue;")
 
         # Create container widget
         container_widget = QWidget()
@@ -92,8 +88,12 @@ class MyWidget(QWidget):
         # Set main layout for widget
         self.setLayout(layout)
 
+        # Set background color of main window to blue
+        self.setStyleSheet("background-color: #D0DAFF;")
+
 if __name__ == '__main__':
     app = QApplication([])
     ex = MyWidget()
     ex.show()
     app.exec()
+
