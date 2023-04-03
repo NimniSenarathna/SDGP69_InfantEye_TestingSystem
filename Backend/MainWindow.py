@@ -111,5 +111,11 @@ def filter_current_position(current_point, reference_point):
         # print("right lower")
     return position_vector
 
+class MainWindow(QMainWindow):
+    def __init__(self, *args, **kwargs):
+        super(MainWindow, self).__init__(*args, **kwargs)
+
+        uic.loadUi('main.ui', self)
+
 
 
