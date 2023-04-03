@@ -175,6 +175,13 @@ class MainWindow(QMainWindow):
             else:
                 self.timer.start(10)
 
+        def update_position(self):
+            # Move the object in a square shape
+            if self.x < 1150 and self.y == 0:
+                self.x += 5
+            elif self.x == 1150 and self.y < 570:
+                self.y += 5
+
 
 
 
