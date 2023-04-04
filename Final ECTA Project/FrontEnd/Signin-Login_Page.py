@@ -6,11 +6,13 @@ from PyQt6.QtGui import QIcon, QPixmap, QIntValidator
 from PyQt6.QtSql import QSqlQuery, QSqlDatabase
 from PyQt6.QtWidgets import QApplication, QWidget, QHBoxLayout, QPushButton, QStackedWidget, QLabel, \
     QLineEdit, QSizePolicy, QGridLayout, QDateEdit, QComboBox
-
+from InfantDetails_Form import MyPage
 
 class Login(QWidget):  ########Login Page##############
     def __init__(self):
         super().__init__()
+
+        self.myPage = MyPage()
 
         self.setWindowTitle('Login')
         self.setWindowIcon(QIcon(''))
@@ -70,33 +72,43 @@ class Login(QWidget):  ########Login Page##############
         self.status = QLabel('')  #########Validate Error Message##########
         self.status.setStyleSheet('font-size: 13px; color: red;')
         layout.addWidget(self.status, 4, 0, 1, 1)
+    def print_click(self):
+        print("Hello WOrld!")
+
 
     def checkcredential(self):  ########Validate Input#######
-        username = self.lineEdits['Username'].text()
-        password = self.lineEdits['Password'].text()
+        try:
+            username = self.lineEdits['Username'].text()
+            password = self.lineEdits['Password'].text()
 
 
-        query = "SELECT * FROM `usertable`WHERE username= %s and user_password= %s "        #####select username and password form database######
-        value = (username, password)
-        cursor.execute(query, value)
-        results = cursor.fetchone()                ######assign password and username to a variable#######
-        self.lineEdits['Username'].setText("")
-        self.lineEdits['Password'].setText("")
+            query = "SELECT * FROM `usertable`WHERE username= %s and user_password= %s "        #####select username and password form database######
+            value = (username, password)
+            cursor.execute(query, value)
+            results = cursor.fetchone()                ######assign password and username to a variable#######
+            self.lineEdits['Username'].setText("")
+            self.lineEdits['Password'].setText("")
 
-        if len(username):
-            if len(password):
-                if results:
-                    self.status.setText('all ok')                ###########check if password and username exist in the database############
-                    # self.lineEdits['Username'].setText("")
-                    # self.lineEdits['Password'].setText("")
+            if len(username):
+                if len(password):
+                    if results:
+                        self.status.setText('all ok')                ###########check if password and username exist in the database############
+                        # self.lineEdits['Username'].setText("")
+                        # self.lineEdits['Password'].setText("")
+                    else:
+                        self.status.setText('User or Password is wrong')
+                        # self.lineEdits['Username'].setText("")
+                        # self.lineEdits['Password'].setText("")
                 else:
-                    self.status.setText('User or Password is wrong')
-                    # self.lineEdits['Username'].setText("")
-                    # self.lineEdits['Password'].setText("")
+                    self.status.setText('enter password')
             else:
-                self.status.setText('enter password')
-        else:
-            self.status.setText('enter username')
+                self.status.setText('enter username')
+
+        except:
+            print("Connection is unsuccessful..")
+            self.myPage.show()
+
+            # take the value to GUI
 
     def open_second_gui(self):  #######Signup page open function#######
         stacked_widget.setCurrentIndex(1)
