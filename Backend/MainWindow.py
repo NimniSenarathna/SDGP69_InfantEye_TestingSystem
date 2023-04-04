@@ -200,6 +200,16 @@ class result(QThread):
 
     def __init__(self, side):
         super(result, self).__init__()
+        self.side = side
+        self.center = np.zeros((1, 9))
+        self.left = np.zeros((1, 9))
+        self.right = np.zeros((1, 9))
+        self.up = np.zeros((1, 9))
+        self.down = np.zeros((1, 9))
+        self.left_upper = np.zeros((1, 9))
+        self.left_lower = np.zeros((1, 9))
+        self.right_upper = np.zeros((1, 9))
+        self.right_lower = np.zeros((1, 9))
 
 
 
