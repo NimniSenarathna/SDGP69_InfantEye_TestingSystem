@@ -214,6 +214,9 @@ class result(QThread):
     def start_get_result(self):
         self.start()
 
+    def stop_get_result(self):
+        self.wait()
+
 
 
 
