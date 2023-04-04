@@ -211,6 +211,9 @@ class result(QThread):
         self.right_upper = np.zeros((1, 9))
         self.right_lower = np.zeros((1, 9))
 
+    def start_get_result(self):
+        self.start()
+
 
 
 
