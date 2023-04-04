@@ -196,6 +196,8 @@ class MainWindow(QMainWindow):
             self.result_left.process(left_vector, self.vector)
             self.result_right.process(right_vector, self.vector)
 
+class result(QThread):
+
 
 
 
