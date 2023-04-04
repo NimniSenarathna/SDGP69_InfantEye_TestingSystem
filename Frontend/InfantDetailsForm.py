@@ -1,7 +1,9 @@
 import sys
+import re
+import datetime
 import mysql.connector
 from PyQt6.QtCore import QRect, Qt
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGridLayout, QCheckBox, QPushButton, QDateEdit, QFormLayout, QSizePolicy
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGridLayout, QCheckBox, QPushButton, QDateEdit, QFormLayout, QSizePolicy, QMessageBox
 from PyQt6.QtGui import QFont, QPixmap
 
 
@@ -92,42 +94,51 @@ class MyPage(QWidget):
         self.first_name_input = QLineEdit()
         self.first_name_input.setFixedSize(200, 30)
         self.first_name_input.setFont(QFont())
+        self.first_name_input.setPlaceholderText("First Name")
         self.surname_input = QLineEdit()
         self.surname_input.setFixedSize(200, 30)
         self.surname_input.setFont(QFont())
+        self.surname_input.setPlaceholderText("Surname")
         gender_label = QLabel("Gender*")
         self.gender_input = QLineEdit()
         self.gender_input.setFixedSize(200, 30)
         self.gender_input.setFont(QFont())
+        self.gender_input.setPlaceholderText("Male/Female")
         dob_label = QLabel("Date of Birth*")
         self.dob_input = QLineEdit()
         self.dob_input.setFixedSize(200, 30)
         self.dob_input.setFont(QFont())
+        self.dob_input.setPlaceholderText("DD/MM/YYYY")
         test_id_label = QLabel("Test ID*")
         self.test_id_input = QLineEdit()
         self.test_id_input.setFixedSize(200, 30)
         self.test_id_input.setFont(QFont())
+        self.test_id_input.setPlaceholderText("123456")
         parent_type_label = QLabel("Parent Type*")
         self.parent_type_input = QLineEdit()
         self.parent_type_input.setFixedSize(200, 30)
         self.parent_type_input.setFont(QFont())
+        self.parent_type_input.setPlaceholderText("Mother/Father")
         parent_name_label = QLabel("Parent's Full Name*")
         self.parent_name_input = QLineEdit()
         self.parent_name_input.setFixedSize(200, 30)
         self.parent_name_input.setFont(QFont())
+        self.parent_name_input.setPlaceholderText("Enter parent full name")
         nic_number_label = QLabel("NIC Number*")
         self.nic_number_input = QLineEdit()
         self.nic_number_input.setFixedSize(200, 30)
         self.nic_number_input.setFont(QFont())
+        self.nic_number_input.setPlaceholderText("Enter NIC number")
         contact_number_label = QLabel("Contact Number*")
         self.contact_number_input = QLineEdit()
         self.contact_number_input.setFixedSize(200, 30)
         self.contact_number_input.setFont(QFont())
+        self.contact_number_input.setPlaceholderText("+94 77 266 8000")
         email_label = QLabel("Email Address*")
         self.email_input = QLineEdit()
         self.email_input.setFixedSize(200, 30)
         self.email_input.setFont(QFont())
-        
+        self.email_input.setPlaceholderText("abcd@gmail.com")
 
         # Create buttons
         self.login_button = QPushButton("Return to LOGINPAGE")
@@ -175,9 +186,6 @@ class MyPage(QWidget):
         button_layout.addWidget(db_button)
         form_layout.addLayout(button_layout, 9, 1, 1, 2)
 
-        # Set the layout for the page
-        #self.setLayout(form_layout)
-        
         # Add the form layout to the container layout
         container_layout.addLayout(form_layout)
 
@@ -247,6 +255,58 @@ class MyPage(QWidget):
         nic_number = self.nic_number_input.text()
         contact_number = self.contact_number_input.text()
         email = self.email_input.text()
+        
+        # Check for empty fields
+        if not all([name, gender, dob, test_id, parent_type, parent_name, nic_number, contact_number, email]):
+           QMessageBox.critical(self, "Error", "Please fill all the fields!")
+           return
+
+        # Validate name
+        if not re.match(r"^[A-Za-z\s]+$", name):
+           QMessageBox.critical(self, "Error", "Name can only contain letters and spaces!")
+           return
+
+        # Validate gender
+        if gender.lower() not in ["male", "female", "other"]:
+           QMessageBox.critical(self, "Error", "Gender can only be Male, Female, or Other!")
+           return
+
+        # Validate dob
+        try:
+           datetime.datetime.strptime(dob, '%d/%m/%Y')
+        except ValueError:
+           QMessageBox.critical(self, "Error", "Invalid date format. Date should be in DD/MM/YYYY format!")
+           return
+
+        # Validate test_id
+        if not re.match(r"^[A-Za-z0-9]+$", test_id):
+           QMessageBox.critical(self, "Error", "Test ID can only contain letters and numbers!")
+           return
+
+        # Validate parent_type
+        if parent_type.lower() not in ["father", "mother", "guardian"]:
+           QMessageBox.critical(self, "Error", "Parent Type can only be Father, Mother, or Guardian!")
+           return
+
+        # Validate parent_name
+        if not re.match(r"^[A-Za-z\s]+$", parent_name):
+           QMessageBox.critical(self, "Error", "Parent Name can only contain letters and spaces!")
+           return
+
+        # Validate nic_number
+        if not re.match(r"^[0-9]{9}[vVxX]?$", nic_number):
+           QMessageBox.critical(self, "Error", "Invalid NIC Number!")
+           return
+
+        # Validate contact_number
+        if not re.match(r"^\+?\d{10,12}$", contact_number):
+           QMessageBox.critical(self, "Error", "Invalid Contact Number!")
+           return
+
+        # Validate email
+        if not re.match(r"^[^@]+@[^@]+\.[^@]+$", email):
+           QMessageBox.critical(self, "Error", "Invalid Email Address!")
+           return
 
         # Connect to MySQL
         conn = mysql.connector.connect(
@@ -272,6 +332,5 @@ if __name__ == '__main__':
     page = MyPage()
     page.show()
     sys.exit(app.exec())
-
 
 
