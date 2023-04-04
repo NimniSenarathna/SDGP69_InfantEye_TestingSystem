@@ -236,6 +236,17 @@ class result(QThread):
             self.left_lower = np.append(self.left_lower, [vector], axis=0)
         elif ref_vector[8] == 1 and np.array_equiv(vector, ref_vector):
             self.left_lower = np.append(self.right_lower, [vector], axis=0)
+
+    def cal_result(self):
+        center_result = np.mean(self.center, axis=0)
+        left_result = np.mean(self.left, axis=0)
+        right_result = np.mean(self.right, axis=0)
+        up_result = np.mean(self.up, axis=0)
+        down_result = np.mean(self.down, axis=0)
+        right_upper_result = np.mean(self.right_upper, axis=0)
+        left_upper_result = np.mean(self.left_upper, axis=0)
+        left_lower_result = np.mean(self.left_lower, axis=0)
+        right_lower_result = np.mean(self.right_lower, axis=0)
             
 
 
