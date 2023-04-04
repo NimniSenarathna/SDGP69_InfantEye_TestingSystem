@@ -236,7 +236,8 @@ class result(QThread):
             self.left_lower = np.append(self.left_lower, [vector], axis=0)
         elif ref_vector[8] == 1 and np.array_equiv(vector, ref_vector):
             self.left_lower = np.append(self.right_lower, [vector], axis=0)
-
+            
+face_mesh_points = mp.solutions.face_mesh
 
 
 
