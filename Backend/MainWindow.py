@@ -198,6 +198,10 @@ class MainWindow(QMainWindow):
 
 class result(QThread):
 
+    def __init__(self, side):
+
+
+
 
 
 
