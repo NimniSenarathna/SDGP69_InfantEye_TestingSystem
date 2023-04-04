@@ -1,5 +1,6 @@
 import sys
 import mysql.connector
+from mysql.connector import errorcode
 from PyQt6.QtCore import QDate
 from PyQt6.QtGui import QIcon, QPixmap, QIntValidator
 from PyQt6.QtSql import QSqlQuery, QSqlDatabase
@@ -74,9 +75,8 @@ class Login(QWidget):  ########Login Page##############
         username = self.lineEdits['Username'].text()
         password = self.lineEdits['Password'].text()
 
-        cnx = mysql.connector.connect(host="localhost", user="root", password="", database="users") ####connect to databse #####
-        cursor = cnx.cursor()
-        query = "SELECT * FROM `users`WHERE username= %s and User_password= %s "        #####select username and password form database######
+
+        query = "SELECT * FROM `usertable`WHERE username= %s and user_password= %s "        #####select username and password form database######
         value = (username, password)
         cursor.execute(query, value)
         results = cursor.fetchone()                ######assign password and username to a variable#######
@@ -225,17 +225,9 @@ class Signup(QWidget):  ########Signup Page#########
         npassword = self.lineEdits['npassword'].text()
         cpassword = self.lineEdits['cpassword'].text()
 
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="users"
-        )
 
-        # Create a cursor object to execute SQL queries
-        cursor = conn.cursor()
 
-        query1 = "SELECT nic_number FROM `users`WHERE username= %s or nic_number= %s "
+        query1 = "SELECT nic FROM `usertable` WHERE username= %s or nic= %s "       #######select from database#######
         value1 = (username, nic)
         cursor.execute(query1, value1)
         results = cursor.fetchone()
@@ -256,7 +248,7 @@ class Signup(QWidget):  ########Signup Page#########
                                                         if npassword == cpassword:
                                                             if not results:
                                                                 self.status.setText('all ok')
-                                                                query = "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                                                                query = "INSERT INTO usertable VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                                                                 values = (
                                                                     firstname, lastname, username, npassword, mobile,
                                                                     nic, dateofbirth, gender)
@@ -265,7 +257,7 @@ class Signup(QWidget):  ########Signup Page#########
                                                                 cursor.execute(query, values)
 
                                                                 # Commit the changes to the database
-                                                                conn.commit()
+                                                                cnx.commit()
                                                                 # self.lineEdits['details'].setText("")
                                                                 self.lineEdits['firstname'].setText("")
                                                                 self.lineEdits['lastname'].setText("")
@@ -339,6 +331,39 @@ if __name__ == '__main__':
     stacked_widget.addWidget(second_gui)
     # self.window_width, self.window_height = 600, 350
     stacked_widget.setFixedSize(600, 400)
+
+    try:                                                        #######connect to database#######
+        cnx = mysql.connector.connect(host="localhost",
+                                      user="root",
+                                      password="",
+                                      database="users",
+                                      autocommit=True)
+        cursor = cnx.cursor()
+        print("Connected to database")
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            # Create the database and table if they don't exist
+            cnx = mysql.connector.connect(host="localhost",
+                                          user="root",
+                                          password="",
+                                          autocommit=True)
+            cursor = cnx.cursor()
+            try:
+                cursor.execute("CREATE DATABASE users")
+                print("Created database")
+            except mysql.connector.Error as err:
+                print(f"Failed creating database: {err}")
+            try:
+                cursor.execute("USE users")
+                cursor.execute("CREATE TABLE usertable (first_name VARCHAR(255),last_name VARCHAR(255),username VARCHAR(255),user_password VARCHAR(255),mobile_number INT,nic VARCHAR(255) PRIMARY KEY,date_of_birth DATE,gender VARCHAR(255));")
+                print("Created table")
+            except mysql.connector.Error as err:
+                print(f"Failed creating table: {err}")
+        else:
+            print(err)
+
 
     stacked_widget.show()
 
