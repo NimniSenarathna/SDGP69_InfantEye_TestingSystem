@@ -74,19 +74,19 @@ class Login(QWidget):  ########Login Page##############
         username = self.lineEdits['Username'].text()
         password = self.lineEdits['Password'].text()
 
-        cnx = mysql.connector.connect(host="localhost", user="root", password="", database="users")
+        cnx = mysql.connector.connect(host="localhost", user="root", password="", database="users") ####connect to databse #####
         cursor = cnx.cursor()
-        query = "SELECT * FROM `users`WHERE username= %s and User_password= %s "
+        query = "SELECT * FROM `users`WHERE username= %s and User_password= %s "        #####select username and password form database######
         value = (username, password)
         cursor.execute(query, value)
-        results = cursor.fetchone()
+        results = cursor.fetchone()                ######assign password and username to a variable#######
         self.lineEdits['Username'].setText("")
         self.lineEdits['Password'].setText("")
 
         if len(username):
             if len(password):
                 if results:
-                    self.status.setText('all ok')
+                    self.status.setText('all ok')                ###########check if password and username exist in the database############
                     # self.lineEdits['Username'].setText("")
                     # self.lineEdits['Password'].setText("")
                 else:
@@ -235,7 +235,7 @@ class Signup(QWidget):  ########Signup Page#########
         # Create a cursor object to execute SQL queries
         cursor = conn.cursor()
 
-        query1 = "SELECT username FROM `users`WHERE username= %s and nic_number= %s "
+        query1 = "SELECT nic_number FROM `users`WHERE username= %s or nic_number= %s "
         value1 = (username, nic)
         cursor.execute(query1, value1)
         results = cursor.fetchone()
@@ -249,12 +249,12 @@ class Signup(QWidget):  ########Signup Page#########
                             if len(dateofbirth) > 0:
                                 if date.isValid():
                                     if len(nic) > 0:
-                                        if not results:
-                                            if len(mobile) > 0:
-                                                if len(npassword) > 0:
-                                                    if len(npassword) >= 4:
-                                                        if len(cpassword) > 0:
-                                                            if npassword == cpassword:
+                                        if len(mobile) > 0:
+                                            if len(npassword) > 0:
+                                                if len(npassword) >= 4:
+                                                    if len(cpassword) > 0:
+                                                        if npassword == cpassword:
+                                                            if not results:
                                                                 self.status.setText('all ok')
                                                                 query = "INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                                                                 values = (
@@ -277,24 +277,24 @@ class Signup(QWidget):  ########Signup Page#########
                                                                 self.lineEdits['npassword'].setText("")
                                                                 self.lineEdits['cpassword'].setText("")
                                                             else:
-                                                                self.status.setText("confirm password dosn't match")
-                                                                self.lineEdits['cpassword'].setText("")
+                                                                self.status.setText('User name or NIC already exist')
+                                                                self.lineEdits['username'].setText("")
+                                                                self.lineEdits['nic'].setText("")
                                                         else:
-                                                            self.status.setText('confirm password')
+                                                            self.status.setText("confirm password dosn't match")
                                                             self.lineEdits['cpassword'].setText("")
                                                     else:
-                                                        self.status.setText('password must be more than 4 digits')
-                                                        self.lineEdits['npassword'].setText("")
+                                                        self.status.setText('confirm password')
+                                                        self.lineEdits['cpassword'].setText("")
                                                 else:
-                                                    self.status.setText('enter new password')
+                                                    self.status.setText('password must be more than 4 digits')
                                                     self.lineEdits['npassword'].setText("")
                                             else:
-                                                self.status.setText('enter mobile number')
-                                                self.lineEdits['mobile'].setText("")
+                                                self.status.setText('enter new password')
+                                                self.lineEdits['npassword'].setText("")
                                         else:
-                                            self.status.setText('User name or NIC already exist')
-                                            self.lineEdits['username'].setText("")
-                                            self.lineEdits['nic'].setText("")
+                                            self.status.setText('enter mobile number')
+                                            self.lineEdits['mobile'].setText("")
                                     else:
                                         self.status.setText('enter nic')
                                         self.lineEdits['nic'].setText("")
@@ -343,4 +343,3 @@ if __name__ == '__main__':
     stacked_widget.show()
 
     sys.exit(app.exec())
-
