@@ -264,10 +264,13 @@ class result(QThread):
 
 face_mesh_points = mp.solutions.face_mesh
 
-            
+class process_thread(QThread):
+    # Signal to emit position vectors
+    position_vector_signal = pyqtSignal(np.ndarray, np.ndarray)
 
 
 
 
-            self.timer.start(100)
+
+
 
