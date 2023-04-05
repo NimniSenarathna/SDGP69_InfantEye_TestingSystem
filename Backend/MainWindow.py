@@ -362,10 +362,10 @@ class process_thread(QThread):
                 cv.destroyAllWindows()
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+    app = QApplication(sys.argv)  # create a new QApplication object
+    window = MainWindow()  # create a new MainWindow object
+    window.show()  # display the main window
+    sys.exit(app.exec_())  # start the event loop and exit the application when done
 
 
 
