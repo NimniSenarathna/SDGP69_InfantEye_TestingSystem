@@ -143,19 +143,19 @@ class MainWindow(QMainWindow):
         self.result_right = result("right")
 
 
-        def start(self):
-            self.thread_process.start_process()
+    def start(self):
+        self.thread_process.start_process()
 
-            self.result_left.start_get_result()
-            self.result_right.start_get_result()
+        self.result_left.start_get_result()
+        self.result_right.start_get_result()
 
-            s_time = time()
-            while time() - s_time < 8:
-                continue
+        s_time = time()
+        while time() - s_time < 8:
+            continue
 
-            self.x = 0
-            self.y = 0
-            self.timer.start(100)
+        self.x = 0
+        self.y = 0
+        self.timer.start(100)
 
     # stop button
     def stop(self):
@@ -169,12 +169,12 @@ class MainWindow(QMainWindow):
         print("stop")
 
         # pause button
-        def pause(self):
-            # Pause the timer
-            if self.timer.isActive():
-                self.timer.stop()
-            else:
-                self.timer.start(10)
+    def pause(self):
+        # Pause the timer
+        if self.timer.isActive():
+            self.timer.stop()
+        else:
+            self.timer.start(10)
 
         def update_position(self):
             # Move the object in a square shape
@@ -193,9 +193,9 @@ class MainWindow(QMainWindow):
             self.vector = filter_current_position((self.x, self.y, 275), center)
 
         # extracting values from the 2 vectors
-        def get_information(self, left_vector, right_vector):
-            self.result_left.process(left_vector, self.vector)
-            self.result_right.process(right_vector, self.vector)
+    def get_information(self, left_vector, right_vector):
+        self.result_left.process(left_vector, self.vector)
+        self.result_right.process(right_vector, self.vector)
 
 class result(QThread):
 
