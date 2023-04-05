@@ -142,59 +142,59 @@ class MainWindow(QMainWindow):
         self.result_right = result("right")
 
 
-        def start(self):
-            self.thread_process.start_process()
+    def start(self):
+        self.thread_process.start_process()
 
-            self.result_left.start_get_result()
-            self.result_right.start_get_result()
+        self.result_left.start_get_result()
+        self.result_right.start_get_result()
 
-            s_time = time()
-            while time() - s_time < 8:
-                continue
+        s_time = time()
+        while time() - s_time < 8:
+            continue
 
-            self.x = 0
-            self.y = 0
-            self.timer.start(100)
+        self.x = 0
+        self.y = 0
+        self.timer.start(100)
 
-        # stop button
-        def stop(self):
+    # stop button
+    def stop(self):
+        self.timer.stop()
+        self.x = 550
+        self.y = 275
+        self.Image_label.move(self.x, self.y)
+        self.thread_process.stop_process()
+        self.result_left.cal_result()
+        self.result_right.cal_result()
+        print("stop")
+
+    # pause button
+    def pause(self):
+        # Pause the timer
+        if self.timer.isActive():
             self.timer.stop()
-            self.x = 550
-            self.y = 275
-            self.Image_label.move(self.x, self.y)
-            self.thread_process.stop_process()
-            self.result_left.cal_result()
-            self.result_right.cal_result()
-            print("stop")
+        else:
+            self.timer.start(10)
 
-        # pause button
-        def pause(self):
-            # Pause the timer
-            if self.timer.isActive():
-                self.timer.stop()
-            else:
-                self.timer.start(10)
+    def update_position(self):
+        # Move the object in a square shape
+        if self.x < 1150 and self.y == 0:
+            self.x += 5
+        elif self.x == 1150 and self.y < 570:
+            self.y += 5
+        elif self.x > 0 and self.y == 570:
+            self.x -= 5
+        elif self.x == 0 and self.y > 0:
+            self.y -= 5
 
-        def update_position(self):
-            # Move the object in a square shape
-            if self.x < 1150 and self.y == 0:
-                self.x += 5
-            elif self.x == 1150 and self.y < 570:
-                self.y += 5
-            elif self.x > 0 and self.y == 570:
-                self.x -= 5
-            elif self.x == 0 and self.y > 0:
-                self.y -= 5
-
-            # Set the position of the object
-            self.Image_label.move(self.x, self.y)
-            center = (550, 275, 275)
-            self.vector = filter_current_position((self.x, self.y, 275), center)
+        # Set the position of the object
+        self.Image_label.move(self.x, self.y)
+        center = (550, 275, 275)
+        self.vector = filter_current_position((self.x, self.y, 275), center)
 
         # extracting values from the 2 vectors
-        def get_information(self, left_vector, right_vector):
-            self.result_left.process(left_vector, self.vector)
-            self.result_right.process(right_vector, self.vector)
+    def get_information(self, left_vector, right_vector):
+        self.result_left.process(left_vector, self.vector)
+        self.result_right.process(right_vector, self.vector)
 
 class result(QThread):
 
@@ -276,90 +276,90 @@ class process_thread(QThread):
         self.process_status = True
         self.time_delay = 1
 
-        def start_process(self):
-            # Set process status to True and start the thread
-            self.process_status = True
-            self.start()
+    def start_process(self):
+        # Set process status to True and start the thread
+        self.process_status = True
+        self.start()
 
-        def stop_process(self):
-            # Set process status to False and wait for the thread to finish
-            self.process_status = False
-            self.wait()
+    def stop_process(self):
+        # Set process status to False and wait for the thread to finish
+        self.process_status = False
+        self.wait()
 
-        def run(self):
-            # Initialize video capture object
-            vid = cv.VideoCapture(0)
+    def run(self):
+        # Initialize video capture object
+        vid = cv.VideoCapture(0)
 
-            # Initialize FaceMesh object with specified parameters
-            with face_mesh_points.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5,
+        # Initialize FaceMesh object with specified parameters
+        with face_mesh_points.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5,
                                            min_tracking_confidence=0.5) as face:
-                get_ref = False
-                while self.process_status:
-                    # Read frame from video capture object
-                    ret, frame = vid.read()
-                    if not ret:
-                        break
-                    # Flip image horizontally
-                    image = cv.flip(frame.copy(), 1)
-                    # Convert image to RGB format
-                    image_rgb = cv.cvtColor(image.copy(), cv.COLOR_BGR2RGB)
-                    # Process image with FaceMesh
-                    result_image = face.process(image_rgb)
-                    # Get dimensions of the original image
-                    img_h, img_w = frame.shape[:2]
-                    if result_image.multi_face_landmarks:
-                        # Get facial landmarks for the first detected face
-                        face_points = np.array([np.multiply([p.x, p.y], [img_w, img_h]).astype(int)
+            get_ref = False
+            while self.process_status:
+                # Read frame from video capture object
+                ret, frame = vid.read()
+                if not ret:
+                    break
+                # Flip image horizontally
+                image = cv.flip(frame.copy(), 1)
+                # Convert image to RGB format
+                image_rgb = cv.cvtColor(image.copy(), cv.COLOR_BGR2RGB)
+                # Process image with FaceMesh
+                result_image = face.process(image_rgb)
+                # Get dimensions of the original image
+                img_h, img_w = frame.shape[:2]
+                if result_image.multi_face_landmarks:
+                    # Get facial landmarks for the first detected face
+                    face_points = np.array([np.multiply([p.x, p.y], [img_w, img_h]).astype(int)
                                                 for p in result_image.multi_face_landmarks[0].landmark])
-                        if not get_ref:
-                            # If this is the first frame, get initial details of eye centers and save to a file
-                            center_left = get_initial_details_of_center_of_the_eye(face_points,
+                    if not get_ref:
+                        # If this is the first frame, get initial details of eye centers and save to a file
+                        center_left = get_initial_details_of_center_of_the_eye(face_points,
                                                                                    param["eye"]["left_iris"],
                                                                                    param["eye"]["left_eye"],
                                                                                    1)
 
-                            with open("init.txt", "w") as f:
-                                f.write(f"left eye initial details\n"
-                                        f"center                                    :{center_left[0][:2]} \n"
-                                        f"radius                                    :{center_left[0][2]} \n"
-                                        f"horizontal width from eye conner to center:{center_left[1]}\n"
-                                        f"vertical height from up to center         :{center_left[2]}\n\n")
+                        with open("init.txt", "w") as f:
+                            f.write(f"left eye initial details\n"
+                                    f"center                                    :{center_left[0][:2]} \n"
+                                    f"radius                                    :{center_left[0][2]} \n"
+                                    f"horizontal width from eye conner to center:{center_left[1]}\n"
+                                    f"vertical height from up to center         :{center_left[2]}\n\n")
 
-                            center_right = get_initial_details_of_center_of_the_eye(face_points,
+                        center_right = get_initial_details_of_center_of_the_eye(face_points,
                                                                                     param["eye"]["right_iris"],
                                                                                     param["eye"]["right_eye"],
                                                                                     1)
-                            with open("init.txt", "a") as f:
-                                f.write(f"right eye initial details\n"
-                                        f"center                                    :{center_right[0][:2]} \n"
-                                        f"radius                                    :{center_right[0][2]} \n"
-                                        f"horizontal width from eye conner to center:{center_right[1]}\n"
-                                        f"vertical height from up to center         :{center_right[2]}\n")
+                        with open("init.txt", "a") as f:
+                            f.write(f"right eye initial details\n"
+                                    f"center                                    :{center_right[0][:2]} \n"
+                                    f"radius                                    :{center_right[0][2]} \n"
+                                    f"horizontal width from eye conner to center:{center_right[1]}\n"
+                                    f"vertical height from up to center         :{center_right[2]}\n")
 
-                            get_ref = True
+                        get_ref = True
 
-                        copy_image = image.copy()
+                    copy_image = image.copy()
 
-                        current_position_left = current_position_details(face_points[param["eye"]["left_iris"]])
-                        position_vector_left = filter_current_position(current_position_left, center_left[0])
-                        l_x, l_y, l_w, l_h = cv.boundingRect(face_points[param["eye"]["left_eye"]])
-                        cv.rectangle(copy_image, (l_x, l_y), (l_x + l_w, l_y + l_h), (0, 255, 0), 2)
-                        cv.circle(copy_image, center_left[0][:2], 2, (0, 255, 0), -1)
-                        cv.line(copy_image, center_left[0][:2], current_position_left[:2], (0, 255, 0), 2)
+                    current_position_left = current_position_details(face_points[param["eye"]["left_iris"]])
+                    position_vector_left = filter_current_position(current_position_left, center_left[0])
+                    l_x, l_y, l_w, l_h = cv.boundingRect(face_points[param["eye"]["left_eye"]])
+                    cv.rectangle(copy_image, (l_x, l_y), (l_x + l_w, l_y + l_h), (0, 255, 0), 2)
+                    cv.circle(copy_image, center_left[0][:2], 2, (0, 255, 0), -1)
+                    cv.line(copy_image, center_left[0][:2], current_position_left[:2], (0, 255, 0), 2)
 
-                        current_position_right = current_position_details(face_points[param["eye"]["right_iris"]])
-                        position_vector_right = filter_current_position(current_position_right, center_right[0])
-                        r_x, r_y, r_w, r_h = cv.boundingRect(face_points[param["eye"]["right_eye"]])
-                        cv.rectangle(copy_image, (r_x, r_y), (r_x + r_w, r_y + r_h), (0, 255, 0), 2)
-                        cv.circle(copy_image, center_right[0][:2], 2, (0, 255, 255), -1)
-                        cv.line(copy_image, center_right[0][:2], current_position_right[:2], (0, 255, 0), 2)
+                    current_position_right = current_position_details(face_points[param["eye"]["right_iris"]])
+                    position_vector_right = filter_current_position(current_position_right, center_right[0])
+                    r_x, r_y, r_w, r_h = cv.boundingRect(face_points[param["eye"]["right_eye"]])
+                    cv.rectangle(copy_image, (r_x, r_y), (r_x + r_w, r_y + r_h), (0, 255, 0), 2)
+                    cv.circle(copy_image, center_right[0][:2], 2, (0, 255, 255), -1)
+                    cv.line(copy_image, center_right[0][:2], current_position_right[:2], (0, 255, 0), 2)
 
-                        cv.imshow("window", copy_image)
-                        cv.waitKey(1)
+                    cv.imshow("window", copy_image)
+                    cv.waitKey(1)
 
-                        self.position_vector_signal.emit(position_vector_left, position_vector_right)
-                vid.release()
-                cv.destroyAllWindows()
+                    self.position_vector_signal.emit(position_vector_left, position_vector_right)
+            vid.release()
+            cv.destroyAllWindows()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)  # create a new QApplication object
