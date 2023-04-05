@@ -5,6 +5,7 @@ import cv2 as cv
 import json
 import math
 from time import time, sleep
+from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
@@ -167,7 +168,11 @@ class MainWindow(QMainWindow):
         self.result_right.cal_result()
         print("stop")
 
+<<<<<<< HEAD
     # pause button
+=======
+        # pause button
+>>>>>>> bc963e3308f94e8a9e493a62f3fdef08685018fc
     def pause(self):
         # Pause the timer
         if self.timer.isActive():
@@ -175,6 +180,7 @@ class MainWindow(QMainWindow):
         else:
             self.timer.start(10)
 
+<<<<<<< HEAD
     def update_position(self):
         # Move the object in a square shape
         if self.x < 1150 and self.y == 0:
@@ -190,6 +196,23 @@ class MainWindow(QMainWindow):
         self.Image_label.move(self.x, self.y)
         center = (550, 275, 275)
         self.vector = filter_current_position((self.x, self.y, 275), center)
+=======
+        def update_position(self):
+            # Move the object in a square shape
+            if self.x < 1150 and self.y == 0:
+                self.x += 5
+            elif self.x == 1150 and self.y < 570:
+                self.y += 5
+            elif self.x > 0 and self.y == 570:
+                self.x -= 5
+            elif self.x == 0 and self.y > 0:
+                self.y -= 5
+
+            # Set the position of the object
+            self.Image_label.move(self.x, self.y)
+            center = (550, 275, 275)
+            self.vector = filter_current_position((self.x, self.y, 275), center)
+>>>>>>> bc963e3308f94e8a9e493a62f3fdef08685018fc
 
         # extracting values from the 2 vectors
     def get_information(self, left_vector, right_vector):
@@ -365,7 +388,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)  # create a new QApplication object
     window = MainWindow()  # create a new MainWindow object
     window.show()  # display the main window
-    sys.exit(app.exec_())  # start the event loop and exit the application when done
+    sys.exit(app.exec_())  # start the event loop and exit the application when
 
 
 

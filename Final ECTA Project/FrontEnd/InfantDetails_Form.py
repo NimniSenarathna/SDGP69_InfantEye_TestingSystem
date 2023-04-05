@@ -6,13 +6,17 @@ from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QGridLayout, QCheckBox, \
     QPushButton, QDateEdit, QFormLayout, QSizePolicy, QMessageBox
 from PyQt6.QtGui import QFont, QPixmap
-from InfantDetail_Database import MyWidget
+<<<<<<< HEAD
+
+=======
+from Infants_Database import MyWidget
+>>>>>>> e28ad65755c48c644ef38d9b6fd95a25baebf224
 
 class MyPage(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.myWidget_DB = MyWidget()
+
 
         # Create the database and table
         self.create_database_and_table()
