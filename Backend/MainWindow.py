@@ -318,6 +318,48 @@ class process_thread(QThread):
                                                                                    param["eye"]["left_eye"],
                                                                                    1)
 
+                            with open("init.txt", "w") as f:
+                                f.write(f"left eye initial details\n"
+                                        f"center                                    :{center_left[0][:2]} \n"
+                                        f"radius                                    :{center_left[0][2]} \n"
+                                        f"horizontal width from eye conner to center:{center_left[1]}\n"
+                                        f"vertical height from up to center         :{center_left[2]}\n\n")
+
+                            center_right = get_initial_details_of_center_of_the_eye(face_points,
+                                                                                    param["eye"]["right_iris"],
+                                                                                    param["eye"]["right_eye"],
+                                                                                    1)
+                            with open("init.txt", "a") as f:
+                                f.write(f"right eye initial details\n"
+                                        f"center                                    :{center_right[0][:2]} \n"
+                                        f"radius                                    :{center_right[0][2]} \n"
+                                        f"horizontal width from eye conner to center:{center_right[1]}\n"
+                                        f"vertical height from up to center         :{center_right[2]}\n")
+
+                            get_ref = True
+
+                        copy_image = image.copy()
+
+                        current_position_left = current_position_details(face_points[param["eye"]["left_iris"]])
+                        position_vector_left = filter_current_position(current_position_left, center_left[0])
+                        l_x, l_y, l_w, l_h = cv.boundingRect(face_points[param["eye"]["left_eye"]])
+                        cv.rectangle(copy_image, (l_x, l_y), (l_x + l_w, l_y + l_h), (0, 255, 0), 2)
+                        cv.circle(copy_image, center_left[0][:2], 2, (0, 255, 0), -1)
+                        cv.line(copy_image, center_left[0][:2], current_position_left[:2], (0, 255, 0), 2)
+
+                        current_position_right = current_position_details(face_points[param["eye"]["right_iris"]])
+                        position_vector_right = filter_current_position(current_position_right, center_right[0])
+                        r_x, r_y, r_w, r_h = cv.boundingRect(face_points[param["eye"]["right_eye"]])
+                        cv.rectangle(copy_image, (r_x, r_y), (r_x + r_w, r_y + r_h), (0, 255, 0), 2)
+                        cv.circle(copy_image, center_right[0][:2], 2, (0, 255, 255), -1)
+                        cv.line(copy_image, center_right[0][:2], current_position_right[:2], (0, 255, 0), 2)
+
+                        cv.imshow("window", copy_image)
+                        cv.waitKey(1)
+
+                        self.position_vector_signal.emit(position_vector_left, position_vector_right)
+                vid.release()
+                cv.destroyAllWindows()
 
 
 
