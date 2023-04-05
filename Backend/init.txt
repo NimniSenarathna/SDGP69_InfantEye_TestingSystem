@@ -1,0 +1,115 @@
+left eye initial details
+center                                    :[353 214] 
+radius                                    :7 
+horizontal width from eye conner to center:0.6235813548993454
+vertical height from up to center         :0.2994257358081711
+
+right eye initial details
+center                                    :[260 226] 
+radius                                    :8 
+horizontal width from eye conner to center:0.5407213060813167
+vertical height from up to center         :0.36760831104690384
+
+
+left eye tracking details
+center details      : average tracking 0.0 
+left details        : average tracking 0.0 
+right details       : average tracking 0.0 
+up details          : average tracking 0.0 
+down details        : average tracking 0.0 
+right upper details : average tracking 0.0 
+left upper details  : average tracking 0.0 
+left lower details  : average tracking 0.0 
+right lower details : average tracking 0.0 
+
+
+
+right eye tracking details
+center details      : average tracking 0.0 
+left details        : average tracking 0.0 
+right details       : average tracking 0.0 
+up details          : average tracking 0.0 
+down details        : average tracking 0.0 
+right upper details : average tracking 0.0 
+left upper details  : average tracking 0.0 
+left lower details  : average tracking 0.0 
+right lower details : average tracking 0.0 
+
+
+
+left eye tracking details
+center details      : average tracking 0.0 
+left details        : average tracking 0.0 
+right details       : average tracking 0.0 
+up details          : average tracking 0.0 
+down details        : average tracking 0.0 
+right upper details : average tracking 0.0 
+left upper details  : average tracking 0.0 
+left lower details  : average tracking 0.0 
+right lower details : average tracking 0.0 
+
+
+
+right eye tracking details
+center details      : average tracking 0.0 
+left details        : average tracking 0.0 
+right details       : average tracking 0.0 
+up details          : average tracking 0.0 
+down details        : average tracking 0.0 
+right upper details : average tracking 0.0 
+left upper details  : average tracking 0.0 
+left lower details  : average tracking 0.0 
+right lower details : average tracking 0.0 
+
+
+
+left eye tracking details
+center details      : average tracking 0.0 
+left details        : average tracking 0.0 
+right details       : average tracking 0.0 
+up details          : average tracking 0.0 
+down details        : average tracking 0.0 
+right upper details : average tracking 0.0 
+left upper details  : average tracking 0.0 
+left lower details  : average tracking 0.0 
+right lower details : average tracking 0.0 
+
+
+
+right eye tracking details
+center details      : average tracking 0.0 
+left details        : average tracking 0.0 
+right details       : average tracking 0.0 
+up details          : average tracking 0.0 
+down details        : average tracking 0.0 
+right upper details : average tracking 0.0 
+left upper details  : average tracking 0.0 
+left lower details  : average tracking 0.0 
+right lower details : average tracking 0.0 
+
+
+
+left eye tracking details
+center details      : average tracking 0.0 
+left details        : average tracking 0.0 
+right details       : average tracking 0.0 
+up details          : average tracking 0.0 
+down details        : average tracking 0.0 
+right upper details : average tracking 0.0 
+left upper details  : average tracking 0.0 
+left lower details  : average tracking 0.0 
+right lower details : average tracking 0.0 
+
+
+
+right eye tracking details
+center details      : average tracking 0.0 
+left details        : average tracking 0.0 
+right details       : average tracking 0.0 
+up details          : average tracking 0.0 
+down details        : average tracking 0.0 
+right upper details : average tracking 0.0 
+left upper details  : average tracking 0.0 
+left lower details  : average tracking 0.0 
+right lower details : average tracking 0.0 
+
