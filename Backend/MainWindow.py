@@ -268,6 +268,14 @@ class process_thread(QThread):
     # Signal to emit position vectors
     position_vector_signal = pyqtSignal(np.ndarray, np.ndarray)
 
+    def __init__(self):
+        super(process_thread, self).__init__()
+
+        # Initialize position vector, process status and time delay
+        self.position_vector = np.zeros((1, 9))
+        self.process_status = True
+        self.time_delay = 1
+
 
 
 
