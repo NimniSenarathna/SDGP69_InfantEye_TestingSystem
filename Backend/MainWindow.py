@@ -286,6 +286,37 @@ class process_thread(QThread):
             self.process_status = False
             self.wait()
 
+        def run(self):
+            # Initialize video capture object
+            vid = cv.VideoCapture(0)
+
+            # Initialize FaceMesh object with specified parameters
+            with face_mesh_points.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5,
+                                           min_tracking_confidence=0.5) as face:
+                get_ref = False
+                while self.process_status:
+                    # Read frame from video capture object
+                    ret, frame = vid.read()
+                    if not ret:
+                        break
+                    # Flip image horizontally
+                    image = cv.flip(frame.copy(), 1)
+                    # Convert image to RGB format
+                    image_rgb = cv.cvtColor(image.copy(), cv.COLOR_BGR2RGB)
+                    # Process image with FaceMesh
+                    result_image = face.process(image_rgb)
+                    # Get dimensions of the original image
+                    img_h, img_w = frame.shape[:2]
+                    if result_image.multi_face_landmarks:
+                        # Get facial landmarks for the first detected face
+                        face_points = np.array([np.multiply([p.x, p.y], [img_w, img_h]).astype(int)
+                                                for p in result_image.multi_face_landmarks[0].landmark])
+                        if not get_ref:
+                            # If this is the first frame, get initial details of eye centers and save to a file
+                            center_left = get_initial_details_of_center_of_the_eye(face_points,
+                                                                                   param["eye"]["left_iris"],
+                                                                                   param["eye"]["left_eye"],
+                                                                                   1)
 
 
 
