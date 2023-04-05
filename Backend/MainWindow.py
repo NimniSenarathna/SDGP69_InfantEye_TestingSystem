@@ -276,6 +276,17 @@ class process_thread(QThread):
         self.process_status = True
         self.time_delay = 1
 
+        def start_process(self):
+            # Set process status to True and start the thread
+            self.process_status = True
+            self.start()
+
+        def stop_process(self):
+            # Set process status to False and wait for the thread to finish
+            self.process_status = False
+            self.wait()
+
+
 
 
 
