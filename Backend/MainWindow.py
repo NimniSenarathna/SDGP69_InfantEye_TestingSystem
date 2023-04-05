@@ -5,6 +5,9 @@ import cv2 as cv
 import json
 import math
 from time import time, sleep
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 
 with open("parameters.json", "r") as read_file:
     param = json.load(read_file)
@@ -151,6 +154,120 @@ class MainWindow(QMainWindow):
 
             self.x = 0
             self.y = 0
+            self.timer.start(100)
+
+        # stop button
+        def stop(self):
+            self.timer.stop()
+            self.x = 550
+            self.y = 275
+            self.Image_label.move(self.x, self.y)
+            self.thread_process.stop_process()
+            self.result_left.cal_result()
+            self.result_right.cal_result()
+            print("stop")
+
+        # pause button
+        def pause(self):
+            # Pause the timer
+            if self.timer.isActive():
+                self.timer.stop()
+            else:
+                self.timer.start(10)
+
+        def update_position(self):
+            # Move the object in a square shape
+            if self.x < 1150 and self.y == 0:
+                self.x += 5
+            elif self.x == 1150 and self.y < 570:
+                self.y += 5
+            elif self.x > 0 and self.y == 570:
+                self.x -= 5
+            elif self.x == 0 and self.y > 0:
+                self.y -= 5
+
+            # Set the position of the object
+            self.Image_label.move(self.x, self.y)
+            center = (550, 275, 275)
+            self.vector = filter_current_position((self.x, self.y, 275), center)
+
+        # extracting values from the 2 vectors
+        def get_information(self, left_vector, right_vector):
+            self.result_left.process(left_vector, self.vector)
+            self.result_right.process(right_vector, self.vector)
+
+class result(QThread):
+
+    def __init__(self, side):
+        super(result, self).__init__()
+        self.side = side
+        self.center = np.zeros((1, 9))
+        self.left = np.zeros((1, 9))
+        self.right = np.zeros((1, 9))
+        self.up = np.zeros((1, 9))
+        self.down = np.zeros((1, 9))
+        self.left_upper = np.zeros((1, 9))
+        self.left_lower = np.zeros((1, 9))
+        self.right_upper = np.zeros((1, 9))
+        self.right_lower = np.zeros((1, 9))
+
+    def start_get_result(self):
+        self.start()
+
+    def stop_get_result(self):
+        self.wait()
+
+    def process(self, vector, ref_vector):
+        if ref_vector[0] == 1 and np.array_equiv(vector, ref_vector):
+            self.center = np.append(self.center, [vector], axis=0)
+        elif ref_vector[1] == 1 and np.array_equiv(vector, ref_vector):
+            self.left = np.append(self.left, [vector], axis=0)
+        elif ref_vector[2] == 1 and np.array_equiv(vector, ref_vector):
+            self.right = np.append(self.right, [vector], axis=0)
+        elif ref_vector[3] == 1 and np.array_equiv(vector, ref_vector):
+            self.up = np.append(self.up, [vector], axis=0)
+        elif ref_vector[4] == 1 and np.array_equiv(vector, ref_vector):
+            self.down = np.append(self.down, [vector], axis=0)
+        elif ref_vector[5] == 1 and np.array_equiv(vector, ref_vector):
+            self.right_upper = np.append(self.right_upper, [vector], axis=0)
+        elif ref_vector[6] == 1 and np.array_equiv(vector, ref_vector):
+            self.left_upper = np.append(self.left_upper, [vector], axis=0)
+        elif ref_vector[7] == 1 and np.array_equiv(vector, ref_vector):
+            self.left_lower = np.append(self.left_lower, [vector], axis=0)
+        elif ref_vector[8] == 1 and np.array_equiv(vector, ref_vector):
+            self.left_lower = np.append(self.right_lower, [vector], axis=0)
+
+    def cal_result(self):
+        center_result = np.mean(self.center, axis=0)
+        left_result = np.mean(self.left, axis=0)
+        right_result = np.mean(self.right, axis=0)
+        up_result = np.mean(self.up, axis=0)
+        down_result = np.mean(self.down, axis=0)
+        right_upper_result = np.mean(self.right_upper, axis=0)
+        left_upper_result = np.mean(self.left_upper, axis=0)
+        left_lower_result = np.mean(self.left_lower, axis=0)
+        right_lower_result = np.mean(self.right_lower, axis=0)
+
+        with open("init.txt", "a") as file:
+            file.write(f'\n\n'
+                       f'{self.side} eye tracking details\n'
+                       f'center details      : average tracking {str(center_result[0])} \n'
+                       f'left details        : average tracking {str(left_result[1])} \n'
+                       f'right details       : average tracking {str(right_result[2])} \n'
+                       f'up details          : average tracking {str(up_result[3])} \n'
+                       f'down details        : average tracking {str(down_result[4] )} \n'
+                       f'right upper details : average tracking {str(right_upper_result[5])} \n'
+                       f'left upper details  : average tracking {str(left_upper_result[6])} \n'
+                       f'left lower details  : average tracking {str(left_lower_result[7])} \n'
+                       f'right lower details : average tracking {str(right_lower_result[8])} \n\n')
+
+
+face_mesh_points = mp.solutions.face_mesh
+
+            
+
+
+
 
             self.timer.start(100)
 
